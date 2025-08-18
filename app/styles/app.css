@@ -1,0 +1,312 @@
+/* ===== APP STRUCTURE (REUSABLE) ===== */
+
+/* Main App Container */
+.app-container {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== AUTH SECTION ===== */
+.auth-section {
+  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-primary);
+  backdrop-filter: blur(10px);
+}
+
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.auth-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Auth Buttons */
+.auth-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-btn.primary {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.auth-btn.primary:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-btn.secondary {
+  background: var(--accent-secondary);
+  color: white;
+}
+
+.auth-btn.secondary:hover {
+  background: #0891b2;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-btn.danger {
+  background: var(--accent-error);
+  color: white;
+}
+
+.auth-btn.danger:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-btn.warning {
+  background: var(--accent-warning);
+  color: white;
+}
+
+.auth-btn.warning:hover {
+  background: #d97706;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== GAME SECTION ===== */
+.game-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  min-height: calc(100vh - 200px); /* Trừ đi header và footer */
+}
+
+.game-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== SCORE DEBUGGER SECTION ===== */
+.score-debugger-section {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 50;
+}
+
+/* ===== FOOTER SECTION ===== */
+.footer-section {
+  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid var(--border-primary);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .auth-section {
+    padding: 1rem;
+  }
+  
+  .auth-container {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .auth-info {
+    justify-content: center;
+  }
+  
+  .auth-actions {
+    justify-content: center;
+  }
+  
+  .game-section {
+    padding: 1rem;
+    min-height: calc(100vh - 250px);
+  }
+  
+  .score-debugger-section {
+    bottom: 0.5rem;
+    right: 0.5rem;
+  }
+  
+  .footer-section {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-section {
+    padding: 0.75rem;
+  }
+  
+  .game-section {
+    padding: 0.75rem;
+  }
+  
+  .auth-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ===== LOADING STATES ===== */
+.loading {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== STATUS MESSAGES ===== */
+.status-message {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-message.info {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.status-message.success {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status-message.warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.status-message.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* ===== BACKEND TEST SECTION ===== */
+.backend-test-section {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid var(--border-primary);
+}
+
+.backend-test-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.backend-tester {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.backend-tester h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.backend-tester label {
+  color: var(--text-secondary);
+}
+
+.backend-tester input {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+}
+
+.backend-tester input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+.test-result {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.test-result h4 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.test-result pre {
+  color: var(--text-secondary);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  line-height: 1.4;
+}
+
+/* ===== RESPONSIVE BACKEND TEST ===== */
+@media (max-width: 768px) {
+  .backend-test-section {
+    padding: 1rem;
+  }
+  
+  .backend-tester {
+    padding: 1rem;
+  }
+  
+  .backend-tester .flex {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .backend-tester .btn {
+    width: 100%;
+  }
+}
