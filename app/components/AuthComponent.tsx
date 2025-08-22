@@ -1,133 +1,133 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import {
   usePrivy,
-  CrossAppAccountWithMetadata,
+  type CrossAppAccountWithMetadata,
 } from "@privy-io/react-auth";
 import { useMonadGamesUser } from "../hooks/useMonadGamesUser";
 
-// Separate component for when Privy is not configured
+const MONAD_APP_ID = process.env.NEXT_PUBLIC_MONAD_APP_ID;
+const MONAD_PORTAL_URL = process.env.NEXT_PUBLIC_MONAD_PORTAL_URL;
+
 function AuthNotConfigured() {
   return (
-    <div className="text-yellow-400 text-sm">
-      Authentication not configured
-    </div>
+    <div className="status-message warning">Authentication not configured</div>
   );
 }
 
-// Main auth component with Privy hooks
-function PrivyAuth({ onAddressChange }: { onAddressChange: (address: string) => void }) {
+type Props = { onAddressChange: (address: string) => void };
+
+// Shorten address for UI
+const shortAddr = (addr?: string) =>
+  addr && addr.startsWith("0x") && addr.length > 10
+    ? `${addr.slice(0, 6)}...${addr.slice(-4)}`
+    : addr || "";
+
+function PrivyAuth({ onAddressChange }: Props) {
   const { authenticated, user, ready, logout, login } = usePrivy();
-  const [accountAddress, setAccountAddress] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
-  const [hasMonadAccount, setHasMonadAccount] = useState<boolean | null>(null);
-  
-  const { 
-    user: monadUser, 
-    hasUsername, 
-    isLoading: isLoadingUser, 
-    error: userError 
-  } = useMonadGamesUser(accountAddress);
+
+  const crossAppAccount = useMemo<
+    CrossAppAccountWithMetadata | undefined
+  >(() => {
+    if (!user) return undefined;
+    return user.linkedAccounts
+      .filter((a): a is CrossAppAccountWithMetadata => a.type === "cross_app")
+      .find((a) => a.providerApp?.id === MONAD_APP_ID);
+  }, [user]);
+
+  const accountAddress = useMemo(() => {
+    const addr = crossAppAccount?.embeddedWallets?.[0]?.address;
+    return typeof addr === "string" ? addr : "";
+  }, [crossAppAccount]);
+
+  const [prevAddr, setPrevAddr] = useState<string>("");
 
   useEffect(() => {
-    // Check if privy is ready and user is authenticated
-    if (authenticated && user && ready) {
-      // Check if user has linkedAccounts
-      if (user.linkedAccounts.length > 0) {
-        // Get the cross app account created using Monad Games ID        
-        const crossAppAccount: CrossAppAccountWithMetadata = user.linkedAccounts.filter(account => account.type === "cross_app" && account.providerApp.id === "cmd8euall0037le0my79qpz42")[0] as CrossAppAccountWithMetadata;
-
-        if (crossAppAccount && crossAppAccount.embeddedWallets.length > 0) {
-          const address = crossAppAccount.embeddedWallets[0].address;
-          setAccountAddress(address);
-          setHasMonadAccount(true);
-          onAddressChange(address);
-        } else {
-          setHasMonadAccount(false);
-          setMessage("You need to link your Monad Games ID account to continue.");
-        }
-      } else {
-        setHasMonadAccount(false);
-        setMessage("You need to link your Monad Games ID account to continue.");
-      }
-    } else {
-      // Clear address when not authenticated
-      setAccountAddress("");
-      setHasMonadAccount(null);
-      onAddressChange("");
+    if (accountAddress !== prevAddr) {
+      setPrevAddr(accountAddress);
+      onAddressChange(accountAddress);
     }
-  }, [authenticated, user, ready, onAddressChange]);
+  }, [accountAddress, prevAddr, onAddressChange]);
 
-  if (!ready) {
-    return <div className="status-message info">Loading...</div>;
-  }
+  const hasMonadAccount = !!crossAppAccount;
+  const {
+    user: monadUser,
+    hasUsername,
+    isLoading: isLoadingUser,
+  } = useMonadGamesUser(accountAddress);
 
+  const profileUrl =
+    hasUsername && monadUser?.username
+      ? `${MONAD_PORTAL_URL}/u/${monadUser.username}`
+      : MONAD_PORTAL_URL;
+
+  const [showCopyAlert, setShowCopyAlert] = useState(false);
+
+  const handleCopy = useCallback(() => {
+    if (!accountAddress) return;
+    navigator.clipboard.writeText(accountAddress).then(() => {
+      setShowCopyAlert(true);
+      setTimeout(() => setShowCopyAlert(false), 2000); // Hide after 2 seconds
+    }).catch(() => {});
+  }, [accountAddress]);
+
+  if (!ready) return <div className="status-message info">Loading…</div>;
+
+  // === NOT CONNECTED: only 1 "Connect" button ===
   if (!authenticated) {
     return (
-      <button 
-        onClick={login}
-        className="auth-btn primary"
-      >
-        Login
-      </button>
+      <div className="auth-actions-row">
+        <button
+          onClick={login}
+          className="user-btn"
+          aria-label="Connect account"
+        >
+          Login
+        </button>
+      </div>
     );
   }
 
+  // === CONNECTED: 2 buttons (Monad ID, Embedded Wallet) ===
   return (
-    <div className="auth-actions">
-      {hasMonadAccount === false ? (
-        // User is authenticated but doesn't have Monad account - show registration link
-        <div className="flex flex-col gap-2">
-          <span className="status-message warning">Bạn chưa có Monad ID, hãy tạo nó</span>
-          <a 
-            href="https://monad-games-id-site.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="auth-btn warning"
-          >
-            Create Monad ID
-          </a>
-        </div>
-      ) : accountAddress ? (
-        <>
-          {isLoadingUser ? (
-            <span className="status-message info">Checking Monad ID...</span>
-          ) : hasUsername && monadUser ? (
-            <span className="status-message success">Welcome, {monadUser.username}!</span>
-          ) : (
-            <a 
-              href="https://monad-games-id-site.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="auth-btn warning"
-            >
-              Register Username
-            </a>
-          )}
-        </>
-      ) : message ? (
-        <span className="status-message error">{message}</span>
-      ) : (
-        <span className="status-message info">Setting up...</span>
-      )}
-      
-      <button 
-        onClick={logout}
-        className="auth-btn danger"
-      >
-        Logout
-      </button>
+    <div className="auth-actions-row">
+      <div className="user-btn">
+        <span>
+          {isLoadingUser
+            ? "Welcome: …"
+            : hasUsername && monadUser?.username
+            ? `@${monadUser.username}`
+            : "@Monad ID"}
+        </span>
+        <button
+          onClick={logout}
+          aria-label="Sign out"
+          title="Sign out"
+        >
+          [→]
+        </button>
+      </div>
+
+      {/* Embedded Wallet button - click to copy */}
+      <div className="wallet-btn">
+        <button
+          onClick={handleCopy}
+          title={accountAddress}
+        >
+          {shortAddr(accountAddress)}
+        </button>
+        {showCopyAlert && (
+          <div className="copy-alert">
+            Wallet copied!
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-// Main component that conditionally renders based on Privy configuration
-export default function AuthComponent({ onAddressChange }: { onAddressChange: (address: string) => void }) {
+export default function AuthComponent({ onAddressChange }: Props) {
   const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
-  
-  if (!privyAppId) {
-    return <AuthNotConfigured />;
-  }
-  
+  if (!privyAppId) return <AuthNotConfigured />;
   return <PrivyAuth onAddressChange={onAddressChange} />;
 }

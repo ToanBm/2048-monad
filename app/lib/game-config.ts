@@ -1,7 +1,7 @@
-// Game configuration
+// Game configuration for 2048 Game
 export const GAME_CONFIG = {
   // Your registered game address
-  GAME_ADDRESS: '0xf5ea577f39318dc012d5Cbbf2d447FdD76c48523',
+  GAME_ADDRESS: process.env.NEXT_PUBLIC_GAME_ADDRESS,
   
   // Game settings
   SCORE_SUBMISSION: {
@@ -12,10 +12,10 @@ export const GAME_CONFIG = {
     TRANSACTION_THRESHOLD: 1,
   },
   
-  // Game metadata
+  // Game metadata for smart contract registration
   METADATA: {
-    name: 'Example Game',
-    url: 'https://mission7-example-game.vercel.app/',
-    image: 'https://picsum.photos/536/354'
+    name: '2048 Game',
+    url: 'https://monad-game-2048.vercel.app',
+    image: 'https://picsum.photos/200'
   }
 } as const;

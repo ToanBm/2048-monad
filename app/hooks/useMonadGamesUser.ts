@@ -39,7 +39,7 @@ export function useMonadGamesUser(walletAddress: string): UseMonadGamesUserRetur
 
       try {
         const response = await fetch(
-          `https://monad-games-id-site.vercel.app/api/check-wallet?wallet=${walletAddress}`
+          `${process.env.NEXT_PUBLIC_MONAD_PORTAL_URL}/api/check-wallet?wallet=${walletAddress}`
         );
 
         if (!response.ok) {

@@ -1,4 +1,5 @@
 // Client-side API helpers for score submission
+import { API_ENDPOINTS } from './api-config';
 
 interface ScoreSubmissionResponse {
   success: boolean;
@@ -31,7 +32,7 @@ export async function submitPlayerScore(
   transactionAmount: number = 1
 ): Promise<ScoreSubmissionResponse> {
   try {
-    const response = await fetch('/api/update-player-data', {
+    const response = await fetch(API_ENDPOINTS.UPDATE_PLAYER_DATA, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -57,7 +58,7 @@ export async function submitPlayerScore(
 // Get player's total data across all games
 export async function getPlayerTotalData(playerAddress: string): Promise<PlayerDataResponse | null> {
   try {
-    const response = await fetch(`/api/get-player-data?address=${encodeURIComponent(playerAddress)}`);
+    const response = await fetch(`${API_ENDPOINTS.GET_PLAYER_DATA}?address=${encodeURIComponent(playerAddress)}`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -73,7 +74,7 @@ export async function getPlayerGameData(
 ): Promise<PlayerDataPerGameResponse | null> {
   try {
     const response = await fetch(
-      `/api/get-player-data-per-game?playerAddress=${encodeURIComponent(playerAddress)}&gameAddress=${encodeURIComponent(gameAddress)}`
+      `${API_ENDPOINTS.GET_PLAYER_DATA_PER_GAME}?playerAddress=${encodeURIComponent(playerAddress)}&gameAddress=${encodeURIComponent(gameAddress)}`
     );
     const data = await response.json();
     return data;
