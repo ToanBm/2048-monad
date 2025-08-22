@@ -69,6 +69,9 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
               
               // Backend returns array of addresses, need to query blockchain for scores
               try {
+                if (!GAME_CONFIG.GAME_ADDRESS) {
+                  throw new Error('Game address not configured');
+                }
                 const blockchainLeaderboard = await getGameLeaderboardFromBlockchain(GAME_CONFIG.GAME_ADDRESS);
                 
                 if (blockchainLeaderboard.length > 0) {
@@ -107,6 +110,9 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
 
       // Fallback: Get from blockchain if backend is not available
       console.log('🔄 Loading leaderboard from blockchain...');
+      if (!GAME_CONFIG.GAME_ADDRESS) {
+        throw new Error('Game address not configured');
+      }
       const blockchainLeaderboard = await getGameLeaderboardFromBlockchain(GAME_CONFIG.GAME_ADDRESS);
       
       if (blockchainLeaderboard.length > 0) {
@@ -121,6 +127,9 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
         
         if (playerAddress) {
           try {
+            if (!GAME_CONFIG.GAME_ADDRESS) {
+              throw new Error('Game address not configured');
+            }
             const realPlayerData = await getPlayerDataPerGame(playerAddress, GAME_CONFIG.GAME_ADDRESS);
             
             const currentPlayerEntry = {
