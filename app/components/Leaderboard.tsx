@@ -47,11 +47,11 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
       return;
     }
 
-    // Call backend API to get leaderboard
-    try {
-      console.log('🔄 Loading leaderboard from backend...');
-      
-              // Try to get from backend first
+          // Call backend API to get leaderboard
+      try {
+        console.log('🔄 Loading leaderboard from backend...');
+        
+        // Try to get from backend first
         try {
           const backendResponse = await fetch(API_ENDPOINTS.GET_LEADERBOARD, {
             method: 'GET',
