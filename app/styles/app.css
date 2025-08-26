@@ -2,14 +2,42 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
   background: #c4b5fd;
+  overflow-x: hidden;
 }
+
 /* ===== AUTH SECTION ===== */
 .auth-section {
+  /* FIX: có justify-content nên cần display:flex */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid rgba(255, 255, 255, 1);
   height: 10vh;
   flex-shrink: 0;
   padding: 20px;
-  justify-content: flex-end;
+}
+
+/* ===== LOGO SECTION ===== */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+}
+
+.logo-text {
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* ===== AUTH LAYOUT ===== */
@@ -21,27 +49,31 @@
 
 /* ===== BUTTONS ===== */
 .user-btn {
-  background: #7c3aed;
+  background: var(--violet-600);
   border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 12px;
-  padding: 12px 24px;
-  font-size: 24px;
+
+  /* Fluid spacing & size - reduced by ~20% */
+  padding: clamp(8px, 1vw, 13px) clamp(13px, 1.4vw, 26px);
+  font-size: clamp(14px, 1.4vw, 22px);
+  height: clamp(38px, 5vh, 56px);
+
   font-weight: bold;
   color: #ffffff;
   transition: transform .1s ease, box-shadow .2s ease;
-  height: 60px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .user-btn:hover {
   box-shadow: var(--shadow-md);
+  background: var(--violet-400);
 }
 
 .chip-btn.mono {
   font-family: ui-monospace, Menlo, Consolas, monospace;
-  font-size: 16px;
+  font-size: clamp(14px, 1.2vw, 16px);
   font-weight: 600;
 }
 
@@ -51,21 +83,25 @@
 }
 
 .wallet-btn button {
-  background: #7c3aed;
+  background: var(--violet-600);
   border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 12px;
-  padding: 12px 24px;
-  font-size: 24px;
+
+  /* Reduced by ~20% */
+  padding: clamp(8px, 1vw, 13px) clamp(13px, 1.4vw, 26px);
+  font-size: clamp(14px, 1.4vw, 22px);
+  height: clamp(38px, 5vh, 56px);
+
   font-weight: bold;
   color: #ffffff;
   font-family: ui-monospace, Menlo, Consolas, monospace;
-  height: 60px;
   display: flex;
   align-items: center;
 }
 
 .wallet-btn button:hover {
   box-shadow: var(--shadow-md);
+  background: var(--violet-400);
 }
 
 .copy-alert {
@@ -84,21 +120,34 @@
 }
 
 @keyframes fadeInOut {
-  0%, 100% { opacity: 0; transform: translateY(-10px); }
-  20%, 80% { opacity: 1; transform: translateY(0); }
-}
 
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  20%,
+  80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* -----------------------------------game-section----------------------------------- */
 .game-section {
-  height: 75vh;
+  height: 80vh;
   flex-shrink: 0;
   padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* -----------------------------------footer-section----------------------------------- */
 .footer-section {
-  height: 15vh;
+  height: 10vh;
   flex-shrink: 0;
   padding: 32px;
   border-top: 2px solid rgba(255, 255, 255, 1);
@@ -108,11 +157,12 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
+  width: 100%;
 }
 
 .footer-text {
   color: #3b0764;
-  font-size: 24px;
+  font-size: clamp(18px, 1.6vw, 28px);
   font-weight: 600;
   margin: 0;
 }
@@ -133,8 +183,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+
+  /* Fluid kích thước nút */
+  width: clamp(40px, 3.4vw, 60px);
+  height: clamp(40px, 3.4vw, 60px);
+
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -150,8 +203,8 @@
 }
 
 .social-button img {
-  width: 32px;
-  height: 32px;
+  width: clamp(24px, 2.2vw, 40px);
+  height: clamp(24px, 2.2vw, 40px);
   filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(1000%) hue-rotate(250deg) brightness(0.8);
   transition: filter 0.2s ease;
 }
@@ -160,115 +213,12 @@
   filter: brightness(0) saturate(100%) invert(15%) sepia(100%) saturate(1000%) hue-rotate(250deg) brightness(1);
 }
 
-
-
-
-
 /* ===== STATUS MESSAGES ===== */
 .status-message {
   padding: 8px 16px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-/* Large Desktop (1920px+) */
-@media (min-width: 1920px) {
-  .app-container {
-    max-width: 1800px;
-    margin: 0 auto;
-  }
-  
-  .game-section {
-    height: 80vh;
-  }
-  
-  .user-btn, .wallet-btn button {
-    font-size: 28px;
-    padding: 16px 32px;
-    height: 70px;
-  }
-  
-  .footer-text {
-    font-size: 28px;
-  }
-  
-  .social-button {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .social-button img {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-/* Desktop (1366px - 1919px) */
-@media (min-width: 1366px) and (max-width: 1919px) {
-  .app-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .game-section {
-    height: 78vh;
-  }
-  
-  .user-btn, .wallet-btn button {
-    font-size: 26px;
-    padding: 14px 28px;
-    height: 65px;
-  }
-  
-  .footer-text {
-    font-size: 26px;
-  }
-}
-
-/* Laptop (1024px - 1365px) */
-@media (min-width: 1024px) and (max-width: 1365px) {
-  .app-container {
-    max-width: 1000px;
-    margin: 0 auto;
-  }
-  
-  .game-section {
-    height: 76vh;
-  }
-  
-  .user-btn, .wallet-btn button {
-    font-size: 22px;
-    padding: 12px 24px;
-    height: 58px;
-  }
-  
-  .footer-text {
-    font-size: 22px;
-  }
-}
-
-/* Small Laptop (768px - 1023px) */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .app-container {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .game-section {
-    height: 74vh;
-  }
-  
-  .user-btn, .wallet-btn button {
-    font-size: 20px;
-    padding: 10px 20px;
-    height: 55px;
-  }
-  
-  .footer-text {
-    font-size: 20px;
-  }
 }
 
 .status-message.info {
@@ -316,11 +266,15 @@
   background: rgb(141, 98, 98);
   border-radius: 16px;
   box-shadow: var(--shadow-xl);
-  width: 1000px;
-  max-width: 90vw;
+
+  /* Fluid width/height */
+  width: clamp(320px, 90vw, 1000px);
   max-height: 90vh;
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
+
+  /* Container Query: để bảng bên trong tự thích ứng theo khung chứa */
+  container-type: inline-size;
 }
 
 .popup-header {
@@ -335,7 +289,7 @@
 }
 
 .popup-title {
-  font-size: 32px;
+  font-size: clamp(22px, 2vw, 32px);
   font-weight: 800;
   margin: 0;
   text-align: center;
@@ -399,6 +353,8 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
+  /* tốt hơn ở màn hẹp */
 }
 
 .header-controls button {
@@ -407,17 +363,24 @@
   font-weight: 600;
   cursor: pointer;
   border: none;
-  font-size: 24px;
+  font-size: clamp(16px, 1.6vw, 24px);
   background: #7c3aed;
   color: #ffffff;
 }
 
-.header-controls button:hover { background: #d1d5db; }
-.header-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
-.player-count { 
-color: #7c3aed; 
-font-size: 24px; 
-font-weight: 600;
+.header-controls button:hover {
+  background: #d1d5db;
+}
+
+.header-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.player-count {
+  color: #7c3aed;
+  font-size: clamp(16px, 1.6vw, 24px);
+  font-weight: 600;
 }
 
 /* ===== LEADERBOARD TABLE ===== */
@@ -429,14 +392,16 @@ font-weight: 600;
 
 .table-header {
   display: grid;
-  grid-template-columns: 80px 1fr 120px 100px;
+  /* Player cột giữa linh hoạt hơn */
+  grid-template-columns: 80px minmax(0, 1fr) 120px 100px;
   gap: 16px;
   padding: 16px;
   background: #7c3aed;
-  font-size: 24px;
+  font-size: clamp(16px, 1.6vw, 24px);
   font-weight: 600;
   color: white;
 }
+
 /* Header styles */
 .header-rank,
 .header-player,
@@ -450,14 +415,14 @@ font-weight: 600;
 
 .table-row {
   display: grid;
-  grid-template-columns: 80px 1fr 120px 100px;
+  grid-template-columns: 80px minmax(0, 1fr) 120px 100px;
   gap: 16px;
   padding: 16px;
   border-bottom: 1px solid #e5e7eb;
   background: white;
   color: #7c3aed;
   font-weight: 600;
-  font-size: 24px;
+  font-size: clamp(16px, 1.6vw, 24px);
 }
 
 .table-row:hover {
@@ -478,19 +443,18 @@ font-weight: 600;
   gap: 12px;
 }
 
-
 .current-player-badge {
   background: #7c3aed;
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
-  font-size: 24px;
+  font-size: clamp(14px, 1.4vw, 24px);
   font-weight: 600;
 }
 
 .leaderboard-info {
   text-align: center;
-  font-size: 24px;
+  font-size: clamp(16px, 1.6vw, 24px);
   font-weight: 600;
   margin-top: 16px;
   padding: 16px;
@@ -516,9 +480,89 @@ font-weight: 600;
   font-size: 14px;
 }
 
+/* =========================
+   BREAKPOINTS CHIẾN LƯỢC
+   (giảm còn 3 mốc chính)
+   ========================= */
 
+/* Small Laptop & thấp hơn (≤1024px): popup chiếm full viewport chiều ngang */
+@media (max-width: 1024px) {
+  .leaderboard-popup-overlay {
+    width: 100%;
+    left: 0;
+    transform: none;
+  }
+}
 
+/* Desktop thường (1366–1919px): giới hạn chiều rộng nội dung popup body để dễ đọc */
+@media (min-width: 1366px) and (max-width: 1919px) {
+  .popup-body {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+}
 
+/* Large Desktop (≥1920px): tăng nhẹ kích thước, giới hạn line-length */
+@media (min-width: 1920px) {
+  .popup-body {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
 
+/* =========================
+   CONTAINER QUERIES
+   Tự thích ứng theo khung popup
+   ========================= */
 
+/* Khi khung popup hẹp, ẩn bớt cột Games để tránh vỡ hàng */
+@container (max-width: 900px) {
 
+  .table-header,
+  .table-row {
+    grid-template-columns: 70px minmax(0, 1fr) 120px;
+    /* bỏ cột 4 */
+  }
+
+  .header-games,
+  .transactions-col {
+    display: none;
+  }
+}
+
+/* Khung cực hẹp: tăng density, giảm khoảng cách */
+@container (max-width: 600px) {
+
+  .table-header,
+  .table-row {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .popup-title {
+    font-size: clamp(20px, 5vw, 26px);
+  }
+}
+
+/* =========================
+   HEIGHT BREAKS (viewport thấp)
+   ========================= */
+@media (max-height: 800px) {
+  .game-section {
+    height: min(72vh, 720px);
+  }
+
+  .footer-section {
+    height: clamp(80px, 14vh, 140px);
+  }
+}
+
+@media (max-height: 700px) {
+  .game-section {
+    height: min(70vh, 640px);
+  }
+
+  .footer-section {
+    height: clamp(76px, 14vh, 130px);
+  }
+}

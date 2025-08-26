@@ -28,8 +28,12 @@ export default function Home() {
 
   return (
     <div className="app-container">
-      {/* Auth */}
+      {/* Header with Logo and Auth */}
       <section className="auth-section">
+        <div className="logo-section">
+          <img src="/monad.svg" alt="Monad Games" className="logo" />
+          <span className="logo-text">2048 Monad Game</span>
+        </div>
         <AuthComponent onAddressChange={handleAddressChange} />
       </section>
 
@@ -44,7 +48,6 @@ export default function Home() {
       {/* Footer */}
       <section className="footer-section">
         <p className="footer-text">© 2025 Monad Games ID</p>
-        <p className="footer-text">Your Passport to Monad Gaming.</p>
         <div className="social-icons">
           <a
             href="https://github.com/ToanBm"
