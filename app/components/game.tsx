@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import LeaderboardPopup from "./LeaderboardPopup";
 import { API_ENDPOINTS } from "../lib/api-config";
+import { useEnv } from "./EnvProvider";
 
 interface Tile {
   id: number;
@@ -114,6 +115,7 @@ function getMaxTile(board: (Tile | null)[][]): number {
 
 /* component */
 export default function Game({ playerAddress, onScoreChange }: GameProps) {
+  const env = useEnv();
   const [mounted, setMounted] = useState(false);
   const [lastSavedScore, setLastSavedScore] = useState(0); // Track last saved score
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
@@ -380,9 +382,9 @@ export default function Game({ playerAddress, onScoreChange }: GameProps) {
             // Check environment variable to disable backend
             console.log(
               "🔍 ENV CHECK:",
-              process.env.NEXT_PUBLIC_DISABLE_BACKEND ?? "undefined"
+              env.NEXT_PUBLIC_DISABLE_BACKEND
             );
-            if ((process.env.NEXT_PUBLIC_DISABLE_BACKEND ?? "") === "true") {
+            if (env.NEXT_PUBLIC_DISABLE_BACKEND === "true") {
               // Mock success - don't call backend
               alert(
                 `✅ Score saved successfully! (Backend disabled)\nScore: ${gameState.score}`

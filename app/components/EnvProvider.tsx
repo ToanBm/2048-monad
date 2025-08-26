@@ -1,0 +1,39 @@
+"use client";
+import { createContext, useContext, useEffect, useState } from 'react';
+
+interface EnvVars {
+  NEXT_PUBLIC_PRIVY_APP_ID: string;
+  NEXT_PUBLIC_MONAD_APP_ID: string;
+  NEXT_PUBLIC_MONAD_PORTAL_URL: string;
+  NEXT_PUBLIC_API_BASE_URL: string;
+  NEXT_PUBLIC_GAME_ADDRESS: string;
+  NEXT_PUBLIC_DISABLE_BACKEND: string;
+}
+
+const EnvContext = createContext<EnvVars | null>(null);
+
+export function EnvProvider({ children }: { children: React.ReactNode }) {
+  const [env, setEnv] = useState<EnvVars | null>(null);
+
+  useEffect(() => {
+    fetch('/api/env')
+      .then(res => res.json())
+      .then(setEnv);
+  }, []);
+
+  if (!env) return <div>Loading...</div>;
+
+  return (
+    <EnvContext.Provider value={env}>
+      {children}
+    </EnvContext.Provider>
+  );
+}
+
+export const useEnv = () => {
+  const context = useContext(EnvContext);
+  if (!context) {
+    throw new Error('useEnv must be used within an EnvProvider');
+  }
+  return context;
+};

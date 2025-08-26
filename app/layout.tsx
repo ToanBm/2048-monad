@@ -4,6 +4,7 @@ import "./styles/index.css";
 import "./styles/app.css";
 import "./styles/game.css";
 import PrivyProvider from "./components/PrivyProvider";
+import { EnvProvider } from "./components/EnvProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <PrivyProvider>{children}</PrivyProvider>
+        <EnvProvider>
+          <PrivyProvider>{children}</PrivyProvider>
+        </EnvProvider>
       </body>
     </html>
   );

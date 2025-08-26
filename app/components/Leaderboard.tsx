@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { getGameLeaderboardFromBlockchain, getPlayerDataPerGame } from '../lib/blockchain';
 import { GAME_CONFIG } from '../lib/game-config';
 import { API_ENDPOINTS } from '../lib/api-config';
+import { useEnv } from './EnvProvider';
 
 interface LeaderboardEntry {
   address: string;
@@ -29,6 +30,7 @@ interface LeaderboardProps {
 }
 
 export default function Leaderboard({ playerAddress }: LeaderboardProps) {
+  const env = useEnv();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
@@ -38,7 +40,7 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
     setError('');
 
     // Check environment variable to disable backend
-    if (process.env.NEXT_PUBLIC_DISABLE_BACKEND === 'true') {
+    if (env.NEXT_PUBLIC_DISABLE_BACKEND === 'true') {
       // Backend disabled - show notification
       console.log('🚀 Backend disabled - showing empty leaderboard');
       setLeaderboard([]);

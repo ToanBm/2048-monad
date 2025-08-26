@@ -5,10 +5,7 @@ import {
   type CrossAppAccountWithMetadata,
 } from "@privy-io/react-auth";
 import { useMonadGamesUser } from "../hooks/useMonadGamesUser";
-
-const MONAD_APP_ID = process.env.NEXT_PUBLIC_MONAD_APP_ID ?? "";
-const MONAD_PORTAL_URL = process.env.NEXT_PUBLIC_MONAD_PORTAL_URL ?? "";
-const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "";
+import { useEnv } from "./EnvProvider";
 
 function AuthNotConfigured() {
   return (
@@ -26,6 +23,7 @@ const shortAddr = (addr?: string) =>
 
 function PrivyAuth({ onAddressChange }: Props) {
   const { authenticated, user, ready, logout, login } = usePrivy();
+  const env = useEnv();
 
   const crossAppAccount = useMemo<
     CrossAppAccountWithMetadata | undefined
@@ -33,8 +31,8 @@ function PrivyAuth({ onAddressChange }: Props) {
     if (!user) return undefined;
     return user.linkedAccounts
       .filter((a): a is CrossAppAccountWithMetadata => a.type === "cross_app")
-      .find((a) => a.providerApp?.id === MONAD_APP_ID);
-  }, [user]);
+      .find((a) => a.providerApp?.id === env.NEXT_PUBLIC_MONAD_APP_ID);
+  }, [user, env.NEXT_PUBLIC_MONAD_APP_ID]);
 
   const accountAddress = useMemo(() => {
     const addr = crossAppAccount?.embeddedWallets?.[0]?.address;
@@ -59,8 +57,8 @@ function PrivyAuth({ onAddressChange }: Props) {
 
   const profileUrl =
     hasUsername && monadUser?.username
-      ? `${MONAD_PORTAL_URL}/u/${monadUser.username}`
-      : MONAD_PORTAL_URL;
+      ? `${env.NEXT_PUBLIC_MONAD_PORTAL_URL}/u/${monadUser.username}`
+      : env.NEXT_PUBLIC_MONAD_PORTAL_URL;
 
   const [showCopyAlert, setShowCopyAlert] = useState(false);
 
@@ -128,6 +126,7 @@ function PrivyAuth({ onAddressChange }: Props) {
 }
 
 export default function AuthComponent({ onAddressChange }: Props) {
-  if (!PRIVY_APP_ID) return <AuthNotConfigured />;
+  const env = useEnv();
+  if (!env.NEXT_PUBLIC_PRIVY_APP_ID) return <AuthNotConfigured />;
   return <PrivyAuth onAddressChange={onAddressChange} />;
 }
