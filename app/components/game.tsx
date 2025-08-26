@@ -380,9 +380,9 @@ export default function Game({ playerAddress, onScoreChange }: GameProps) {
             // Check environment variable to disable backend
             console.log(
               "🔍 ENV CHECK:",
-              process.env.NEXT_PUBLIC_DISABLE_BACKEND
+              process.env.NEXT_PUBLIC_DISABLE_BACKEND ?? "undefined"
             );
-            if (process.env.NEXT_PUBLIC_DISABLE_BACKEND === "true") {
+            if ((process.env.NEXT_PUBLIC_DISABLE_BACKEND ?? "") === "true") {
               // Mock success - don't call backend
               alert(
                 `✅ Score saved successfully! (Backend disabled)\nScore: ${gameState.score}`

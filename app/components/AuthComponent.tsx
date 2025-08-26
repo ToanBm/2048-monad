@@ -6,9 +6,9 @@ import {
 } from "@privy-io/react-auth";
 import { useMonadGamesUser } from "../hooks/useMonadGamesUser";
 
-const MONAD_APP_ID = process.env.NEXT_PUBLIC_MONAD_APP_ID;
-const MONAD_PORTAL_URL = process.env.NEXT_PUBLIC_MONAD_PORTAL_URL;
-const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+const MONAD_APP_ID = process.env.NEXT_PUBLIC_MONAD_APP_ID ?? "";
+const MONAD_PORTAL_URL = process.env.NEXT_PUBLIC_MONAD_PORTAL_URL ?? "";
+const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "";
 
 function AuthNotConfigured() {
   return (
@@ -128,7 +128,6 @@ function PrivyAuth({ onAddressChange }: Props) {
 }
 
 export default function AuthComponent({ onAddressChange }: Props) {
-  console.log("PRIVY_APP_ID:", PRIVY_APP_ID);
   if (!PRIVY_APP_ID) return <AuthNotConfigured />;
   return <PrivyAuth onAddressChange={onAddressChange} />;
 }
