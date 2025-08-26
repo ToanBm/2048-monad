@@ -1,26 +1,20 @@
+// app/components/Providers.tsx
 "use client";
-
 import { PrivyProvider } from "@privy-io/react-auth";
-import { useMemo } from "react";
+
+const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "";
+const MONAD_CROSS_APPID = process.env.NEXT_PUBLIC_MONAD_APP_ID ?? "";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "";
-
-  // During build time or when no app ID is provided, render children without Privy
-  if (!privyAppId) {
-    console.warn('NEXT_PUBLIC_PRIVY_APP_ID is not set. Privy authentication will not be available.');
+  if (!PRIVY_APP_ID) {
+    console.warn("NEXT_PUBLIC_PRIVY_APP_ID is not set.");
     return <>{children}</>;
   }
-
   return (
     <PrivyProvider
-      appId={privyAppId}
+      appId={PRIVY_APP_ID}
       config={{
-        loginMethodsAndOrder: {
-          // Don't forget to enable Monad Games ID support in:
-          // Global Wallet > Integrations > Monad Games ID (click on the slide to enable)
-          primary: [`privy:${process.env.NEXT_PUBLIC_MONAD_APP_ID ?? ""}`], // This is the Cross App ID
-        },
+        loginMethodsAndOrder: { primary: [`privy:${MONAD_CROSS_APPID}`] },
       }}
     >
       {children}
