@@ -1,146 +1,88 @@
-/* ===== THEME — PURPLE ===== */
-/* (Không phụ thuộc biến cũ) */
-:root {
-  --violet-50: #f5f3ff;
-  --violet-100: #ede9fe;
-  --violet-200: #ddd6fe;
-  --violet-300: #c4b5fd;
-  --violet-400: #a78bfa;
-  --violet-500: #8b5cf6;
-  --violet-600: #7c3aed;
-  --violet-700: #6d28d9;
-  --violet-800: #5b21b6;
-  --violet-900: #4c1d95;
-  --violet-950: #3b0764;
-
-  --text-on-light: #3b0764;
-  --text-on-dark: #ffffff;
-  --border-purple: var(--violet-300);
-
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.18);
-  --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.2);
-  --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.22);
-}
-
-/* ===== 2048 — CONTAINER & HEADER ===== */
+/* ========= 2048 BOARD ========= */
 .game-container {
   position: relative;
-  background: #a78bfa;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 16px;
-  padding: 24px 36px;
+  background: var(--violet-400);
+  border: 1px solid rgba(255, 255, 255, .5);
+  border-radius: 14px;
+  /* giảm nhẹ */
+  padding: clamp(12px, 1.6vmin, 20px);
+  /* -20% */
   box-shadow: var(--shadow-xl);
-  width: 100%;
+  width: clamp(280px, 48vmin, 520px);
+  /* -20% */
   margin: 0 auto;
   backdrop-filter: blur(10px);
+  container-type: inline-size;
 }
 
-/* ===== SCORES ===== */
+/* Scores panel */
 .score-panel {
   display: flex;
   justify-content: space-between;
-  margin-bottom: clamp(16px, 2.4vw, 24px);
-  gap: clamp(6px, 1.2vw, 8px);
+  margin-bottom: clamp(10px, 1.6vmin, 18px);
+  /* -20% */
+  gap: clamp(4px, 0.8vmin, 8px);
   flex-wrap: wrap;
-  /* tốt hơn ở khung hẹp */
 }
 
 .score-button {
   background: var(--violet-600);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
-  padding: clamp(12px, 1.8vw, 16px);
-  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, .5);
+  border-radius: 10px;
+  padding: clamp(8px, 1vmin, 12px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(6px, 1vw, 8px);
-  min-height: clamp(64px, 8vh, 80px);
-  transition: all 0.2s ease;
-  color: #ffffff;
+  min-height: clamp(42px, 5.5vmin, 64px);
+  /* -20% */
+  color: #fff;
   flex: 1 1 auto;
-  /* fluid mặc định */
-}
-
-.score-button.current-score,
-.score-button.best-score {
-  cursor: default;
-  flex: 1 1 auto;
-  min-width: 120px;
-}
-
-.score-button.leaderboard-btn {
-  cursor: default;
-  flex: 1 1 auto;
-  justify-content: center;
-  min-width: 150px;
+  min-width: 100px;
 }
 
 .score-button strong {
-  color: #ffffff;
-  font-size: clamp(12px, 1.4vw, 14px);
-  font-weight: 800;
+  font-size: clamp(10px, 3vmin, 12px);
 }
 
 .score-value {
-  font-size: clamp(22px, 2.2vw, 28px);
+  font-size: clamp(14px, 2.2vmin, 22px);
   font-weight: 900;
-  color: #ffffff;
-  line-height: 1;
 }
 
-/* ===== BOARD ===== */
+/* Board grid */
 .game-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  /* 2048 chuẩn: 4 cột */
-  gap: clamp(8px, 1.2vw, 12px);
+  gap: clamp(4px, 1vmin, 8px);
+  /* -20% */
   background: var(--violet-100);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  padding: clamp(8px, 1.4vw, 12px);
-  border-radius: 12px;
-  margin-bottom: clamp(16px, 2.4vw, 24px);
-  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, .5);
+  padding: clamp(4px, 1vmin, 8px);
+  border-radius: 10px;
+  margin-bottom: clamp(12px, 1.8vmin, 18px);
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, .15);
 }
 
-/* ===== CELLS ===== */
 .grid-cell {
   aspect-ratio: 1;
-  border-radius: 8px;
+  border-radius: clamp(5px, 0.8vmin, 8px);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: clamp(22px, 5vw, 32px);
-  color: var(--text-on-dark);
+  font-size: clamp(14px, 3vmin, 22px);
+  /* -20% */
   box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-  animation: tileAppear 0.25s ease-out;
+  animation: tileAppear .25s ease-out;
 }
 
-.grid-cell::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent);
-  opacity: 0;
-  transition: opacity .2s ease;
-}
-
-.grid-cell:hover::before {
-  opacity: 1;
-}
-
-/* Empty */
 .grid-cell.empty {
   background: var(--violet-100);
   color: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, .5);
 }
 
-/* ===== PURPLE SCALE FOR TILE VALUES ===== */
+/* Tile colors */
 .grid-cell.tile-2 {
   background: var(--violet-200);
   color: var(--text-on-light);
@@ -153,31 +95,22 @@
 
 .grid-cell.tile-8 {
   background: var(--violet-400);
-  color: var(--text-on-dark);
+  color: #fff;
 }
 
 .grid-cell.tile-16 {
   background: var(--violet-500);
-  color: var(--text-on-dark);
+  color: #fff;
 }
 
 .grid-cell.tile-32 {
   background: var(--violet-600);
-  color: var(--text-on-dark);
+  color: #fff;
 }
 
 .grid-cell.tile-64 {
   background: var(--violet-700);
-  color: var(--text-on-dark);
-}
-
-.grid-cell.tile-128,
-.grid-cell.tile-256,
-.grid-cell.tile-512,
-.grid-cell.tile-1024,
-.grid-cell.tile-2048 {
-  color: var(--text-on-dark);
-  font-size: clamp(14px, 3.2vw, 22px);
+  color: #fff;
 }
 
 .grid-cell.tile-128 {
@@ -200,71 +133,54 @@
   background: #1e0b3f;
 }
 
-/* ===== GAME STATUS ===== */
+/* Game message */
 .game-message {
   text-align: center;
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  font-weight: 700;
-  font-size: clamp(16px, 1.6vw, 18px);
+  padding: 10px;
+  /* -20% */
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-weight: 800;
+  font-size: clamp(12px, 1.3vmin, 16px);
 }
 
 .game-message.victory {
   background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  box-shadow: var(--shadow-md);
+  color: #fff;
 }
 
 .game-message.game-over {
   background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
-  box-shadow: var(--shadow-md);
+  color: #fff;
 }
 
-/* =========================== CONTROLS =========================== */
+/* Controls */
 .control-panel {
   display: flex;
-  gap: clamp(8px, 1.2vw, 12px);
+  gap: clamp(4px, 0.8vmin, 8px);
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .control-button {
   background: var(--violet-600);
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
-  padding: clamp(12px, 1.6vw, 16px) clamp(16px, 2vw, 24px);
-  font-size: clamp(16px, 1.8vw, 24px);
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  height: clamp(44px, 7vh, 60px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .5);
+  border-radius: 10px;
+  padding: clamp(8px, 1.2vmin, 12px) clamp(12px, 1.4vmin, 18px);
+  font-size: clamp(12px, 1.6vmin, 16px);
+  /* -20% */
+  font-weight: 800;
+  height: clamp(32px, 5vmin, 44px);
+  /* -20% */
   flex: 1;
 }
 
 .control-button:hover {
-  box-shadow: var(--shadow-md);
   background: var(--violet-400);
 }
 
-.control-button:active {
-  transform: translateY(0);
-}
-
-.control-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.control-button:disabled:hover {
-  transform: none;
-  box-shadow: var(--shadow-sm);
-}
-
-/* ===== ANIMATIONS ===== */
+/* Animations */
 @keyframes tileAppear {
   from {
     opacity: 0;
@@ -292,85 +208,5 @@
 }
 
 .grid-cell.merged {
-  animation: tileMerge 0.3s ease-out;
-}
-
-/* =========================
-   BREAKPOINTS CHIẾN LƯỢC
-   (giữ tối thiểu, chỉ “nắn” ngưỡng xấu)
-   ========================= */
-
-/* ≤1024px: ưu tiên co cụm điểm và nút */
-@media (max-width: 1024px) {
-
-  .score-button.current-score,
-  .score-button.best-score {
-    flex: 0 0 clamp(140px, 32%, 45%);
-  }
-
-  .score-button.leaderboard-btn {
-    flex: 1 1 100%;
-  }
-}
-
-/* 1366–1919px: giới hạn line-length cho phần mô tả/nhắn */
-@media (min-width: 1366px) and (max-width: 1919px) {
-  .game-message {
-    max-width: 48ch;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-/* ≥1920px: tăng nhẹ mật độ & giới hạn chiều rộng tổng thể */
-@media (min-width: 1920px) {
-  .game-container {
-    max-width: 600px;
-  }
-
-  /* đã fluid, giữ cap trên */
-  .game-message {
-    max-width: 52ch;
-  }
-}
-
-/* =========================
-   CONTAINER QUERIES
-   Tự thích ứng theo khung .game-container
-   ========================= */
-
-/* Khung hẹp: giảm gap/padding, co font, sắp xếp score-panel hợp lý */
-@container (max-width: 440px) {
-  .game-grid {
-    gap: 8px;
-    padding: 8px;
-  }
-
-  .score-panel {
-    gap: 8px;
-  }
-
-  .score-button {
-    min-height: 60px;
-  }
-
-  .score-button.current-score,
-  .score-button.best-score {
-    flex: 1 1 calc(50% - 8px);
-  }
-
-  .score-button.leaderboard-btn {
-    flex: 1 1 100%;
-  }
-}
-
-/* Khung rất hẹp: ưu tiên chơi, thu nhỏ padding tổng */
-@container (max-width: 360px) {
-  .game-container {
-    padding: 16px;
-  }
-
-  .control-button {
-    flex: 1 1 100%;
-  }
+  animation: tileMerge .3s ease-out;
 }

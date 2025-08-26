@@ -1,27 +1,48 @@
+/* ========= APP SHELL ========= */
+:root {
+  --violet-50: #f5f3ff;
+  --violet-100: #ede9fe;
+  --violet-200: #ddd6fe;
+  --violet-300: #c4b5fd;
+  --violet-400: #a78bfa;
+  --violet-500: #8b5cf6;
+  --violet-600: #7c3aed;
+  --violet-700: #6d28d9;
+  --violet-800: #5b21b6;
+  --violet-900: #4c1d95;
+  --violet-950: #3b0764;
+
+  --text-on-light: #3b0764;
+  --text-on-dark: #ffffff;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.18);
+  --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.22);
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   margin: 0;
-  padding: 0;
-  background: #c4b5fd;
+  padding: 10px 0;
+  background: var(--violet-300);
   overflow-x: hidden;
 }
 
-/* ===== AUTH SECTION ===== */
+/* ========= HEADER ========= */
 .auth-section {
-  /* FIX: có justify-content nên cần display:flex */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid rgba(255, 255, 255, 1);
-  height: 10vh;
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
+  height: clamp(56px, 10vh, 80px);
+  padding: 0px 20px;
   flex-shrink: 0;
-  padding: 20px;
 }
 
-/* ===== LOGO SECTION ===== */
 .logo-section {
   display: flex;
   align-items: center;
@@ -29,41 +50,37 @@
 }
 
 .logo {
-  width: 100px;
-  height: 100px;
+  width: clamp(48px, 4vw, 72px);
+  height: clamp(48px, 4vw, 72px);
 }
 
 .logo-text {
-  font-size: clamp(36px, 4vw, 56px);
-  font-weight: bold;
-  color: #ffffff;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: clamp(24px, 2vw, 40px);
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, .3);
 }
 
-/* ===== AUTH LAYOUT ===== */
 .auth-actions-row {
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
-/* ===== BUTTONS ===== */
+/* ========= BUTTONS ========= */
 .user-btn {
   background: var(--violet-600);
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 12px;
-
-  /* Fluid spacing & size - reduced by ~20% */
   padding: clamp(8px, 1vw, 13px) clamp(13px, 1.4vw, 26px);
-  font-size: clamp(14px, 1.4vw, 22px);
+  font-size: clamp(14px, 1vw, 18px);
   height: clamp(38px, 5vh, 56px);
-
-  font-weight: bold;
-  color: #ffffff;
-  transition: transform .1s ease, box-shadow .2s ease;
+  font-weight: 700;
+  color: #fff;
   display: flex;
   align-items: center;
   gap: 10px;
+  transition: all .2s ease;
 }
 
 .user-btn:hover {
@@ -73,27 +90,23 @@
 
 .chip-btn.mono {
   font-family: ui-monospace, Menlo, Consolas, monospace;
-  font-size: clamp(14px, 1.2vw, 16px);
   font-weight: 600;
 }
 
-/* ===== WALLET POPUP ===== */
+/* ========= WALLET BUTTON ========= */
 .wallet-btn {
   position: relative;
 }
 
 .wallet-btn button {
   background: var(--violet-600);
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 12px;
-
-  /* Reduced by ~20% */
   padding: clamp(8px, 1vw, 13px) clamp(13px, 1.4vw, 26px);
-  font-size: clamp(14px, 1.4vw, 22px);
+  font-size: clamp(14px, 1vw, 18px);
   height: clamp(38px, 5vh, 56px);
-
-  font-weight: bold;
-  color: #ffffff;
+  font-weight: 700;
+  color: #fff;
   font-family: ui-monospace, Menlo, Consolas, monospace;
   display: flex;
   align-items: center;
@@ -113,7 +126,7 @@
   padding: 12px;
   border-radius: 6px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   box-shadow: var(--shadow-md);
   z-index: 30;
   animation: fadeInOut 2s ease-in-out;
@@ -134,45 +147,36 @@
   }
 }
 
-/* -----------------------------------game-section----------------------------------- */
+/* ========= MAIN / FOOTER ========= */
 .game-section {
-  height: 80vh;
-  flex-shrink: 0;
+  flex: 1 1 auto;
+  min-height: 0;
   padding: 10px;
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* -----------------------------------footer-section----------------------------------- */
 .footer-section {
-  height: 10vh;
-  flex-shrink: 0;
-  padding: 32px;
-  border-top: 2px solid rgba(255, 255, 255, 1);
+  height: clamp(56px, 10vh, 88px);
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 1);
   margin-top: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  width: 100%;
 }
 
 .footer-text {
   color: #3b0764;
-  font-size: clamp(18px, 1.6vw, 28px);
-  font-weight: 600;
+  font-size: clamp(16px, 1.2vw, 24px);
+  font-weight: 700;
   margin: 0;
 }
 
-.footer-text:first-child {
-  font-weight: 600;
-  color: #3b0764;
-}
-
-/* ===== SOCIAL ICONS ===== */
+/* ========= SOCIAL ========= */
 .social-icons {
   display: flex;
   gap: 12px;
@@ -183,103 +187,49 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  /* Fluid kích thước nút */
-  width: clamp(40px, 3.4vw, 60px);
-  height: clamp(40px, 3.4vw, 60px);
-
+  width: clamp(40px, 2vw, 56px);
+  height: clamp(40px, 2vw, 56px);
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  transition: all 0.2s ease;
-  text-decoration: none;
+  transition: .2s ease;
 }
 
 .social-button:hover {
-  background: #7c3aed;
-  border-color: rgba(255, 255, 255, 0.4);
+  background: var(--violet-600);
+  border-color: rgba(255, 255, 255, .4);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .social-button img {
-  width: clamp(24px, 2.2vw, 40px);
-  height: clamp(24px, 2.2vw, 40px);
-  filter: brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(1000%) hue-rotate(250deg) brightness(0.8);
-  transition: filter 0.2s ease;
+  width: clamp(20px, 2.2vw, 36px);
+  height: clamp(20px, 2.2vw, 36px);
 }
 
-.social-button:hover img {
-  filter: brightness(0) saturate(100%) invert(15%) sepia(100%) saturate(1000%) hue-rotate(250deg) brightness(1);
-}
-
-/* ===== STATUS MESSAGES ===== */
-.status-message {
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.status-message.info {
-  background: rgba(139, 92, 246, 0.15);
-  color: #3b0764;
-  border: 1px solid #ffffff1a;
-}
-
-.status-message.success {
-  background: rgba(124, 58, 237, 0.15);
-  color: #3b0764;
-  border: 1px solid #ffffff1a;
-}
-
-.status-message.warning {
-  background: rgba(245, 158, 11, 0.1);
-  color: #3b0764;
-  border: 1px solid #ffffff1a;
-}
-
-.status-message.error {
-  background: rgba(239, 68, 68, 0.1);
-  color: #3b0764;
-  border: 1px solid #ffffff1a;
-}
-
-/* ===== LEADERBOARD POPUP ===== */
+/* ========= LEADERBOARD POPUP ========= */
 .leaderboard-popup-overlay {
   position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1000px;
-  background: rgba(0, 0, 0, 0.7);
+  inset: 0;
+  background: rgba(0, 0, 0, .7);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
 }
 
 .leaderboard-popup-content {
-  background: rgb(141, 98, 98);
+  background: #fff;
   border-radius: 16px;
   box-shadow: var(--shadow-xl);
-
-  /* Fluid width/height */
-  width: clamp(320px, 90vw, 1000px);
-  max-height: 90vh;
+  width: clamp(320px, 92vw, 960px);
+  max-height: min(90vh, 860px);
   overflow: hidden;
-  animation: slideUp 0.3s ease-out;
-
-  /* Container Query: để bảng bên trong tự thích ứng theo khung chứa */
-  container-type: inline-size;
 }
 
 .popup-header {
-  background: #7c3aed;
-  color: white;
+  background: var(--violet-600);
+  color: #fff;
   padding: 16px;
   display: flex;
   align-items: center;
@@ -289,280 +239,64 @@
 }
 
 .popup-title {
-  font-size: clamp(22px, 2vw, 32px);
-  font-weight: 800;
+  font-size: clamp(20px, 2.2vmin, 28px);
+  font-weight: 900;
   margin: 0;
-  text-align: center;
 }
 
 .popup-close-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 32px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-}
-
-.popup-close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
 }
 
 .popup-body {
-  padding: 24px;
+  padding: clamp(16px, 2vmin, 24px);
   max-height: 60vh;
   overflow-y: auto;
-  background: #c4b5fd;
+  background: var(--violet-300);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ===== LEADERBOARD HEADER ===== */
-.leaderboard-header {
-  margin-bottom: 16px;
-}
-
-.header-controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-  /* tốt hơn ở màn hẹp */
-}
-
-.header-controls button {
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  font-size: clamp(16px, 1.6vw, 24px);
-  background: #7c3aed;
-  color: #ffffff;
-}
-
-.header-controls button:hover {
-  background: #d1d5db;
-}
-
-.header-controls button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.player-count {
-  color: #7c3aed;
-  font-size: clamp(16px, 1.6vw, 24px);
-  font-weight: 600;
-}
-
-/* ===== LEADERBOARD TABLE ===== */
 .leaderboard-table {
-  background: white;
+  background: #fff;
   border-radius: 8px;
   margin-top: 16px;
 }
 
-.table-header {
-  display: grid;
-  /* Player cột giữa linh hoạt hơn */
-  grid-template-columns: 80px minmax(0, 1fr) 120px 100px;
-  gap: 16px;
-  padding: 16px;
-  background: #7c3aed;
-  font-size: clamp(16px, 1.6vw, 24px);
-  font-weight: 600;
-  color: white;
-}
-
-/* Header styles */
-.header-rank,
-.header-player,
-.header-score,
-.header-games {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-}
-
+.table-header,
 .table-row {
   display: grid;
   grid-template-columns: 80px minmax(0, 1fr) 120px 100px;
-  gap: 16px;
-  padding: 16px;
-  border-bottom: 1px solid #e5e7eb;
-  background: white;
-  color: #7c3aed;
-  font-weight: 600;
-  font-size: clamp(16px, 1.6vw, 24px);
-}
-
-.table-row:hover {
-  background: #f3f4f6;
-}
-
-.rank-col,
-.score-col,
-.transactions-col {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.player-col {
-  display: flex;
-  align-items: center;
   gap: 12px;
+  padding: 12px;
+  font-weight: 800;
 }
 
-.current-player-badge {
-  background: #7c3aed;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: clamp(14px, 1.4vw, 24px);
-  font-weight: 600;
+.table-header {
+  background: var(--violet-600);
+  color: #fff;
 }
 
-.leaderboard-info {
-  text-align: center;
-  font-size: clamp(16px, 1.6vw, 24px);
-  font-weight: 600;
-  margin-top: 16px;
-  padding: 16px;
-  background: transparent;
-  border-radius: 8px;
-  color: #7c3aed;
+.table-row {
+  color: var(--violet-700);
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.error-message {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-  color: #dc2626;
-  text-align: center;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 32px 16px;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-/* =========================
-   BREAKPOINTS CHIẾN LƯỢC
-   (giảm còn 3 mốc chính)
-   ========================= */
-
-/* Small Laptop & thấp hơn (≤1024px): popup chiếm full viewport chiều ngang */
-@media (max-width: 1024px) {
-  .leaderboard-popup-overlay {
-    width: 100%;
-    left: 0;
-    transform: none;
-  }
-}
-
-/* Desktop thường (1366–1919px): giới hạn chiều rộng nội dung popup body để dễ đọc */
-@media (min-width: 1366px) and (max-width: 1919px) {
-  .popup-body {
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-}
-
-/* Large Desktop (≥1920px): tăng nhẹ kích thước, giới hạn line-length */
-@media (min-width: 1920px) {
-  .popup-body {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-}
-
-/* =========================
-   CONTAINER QUERIES
-   Tự thích ứng theo khung popup
-   ========================= */
-
-/* Khi khung popup hẹp, ẩn bớt cột Games để tránh vỡ hàng */
-@container (max-width: 900px) {
+@media (max-width:1024px) {
 
   .table-header,
   .table-row {
     grid-template-columns: 70px minmax(0, 1fr) 120px;
-    /* bỏ cột 4 */
   }
 
   .header-games,
   .transactions-col {
     display: none;
-  }
-}
-
-/* Khung cực hẹp: tăng density, giảm khoảng cách */
-@container (max-width: 600px) {
-
-  .table-header,
-  .table-row {
-    gap: 12px;
-    padding: 12px;
-  }
-
-  .popup-title {
-    font-size: clamp(20px, 5vw, 26px);
-  }
-}
-
-/* =========================
-   HEIGHT BREAKS (viewport thấp)
-   ========================= */
-@media (max-height: 800px) {
-  .game-section {
-    height: min(72vh, 720px);
-  }
-
-  .footer-section {
-    height: clamp(80px, 14vh, 140px);
-  }
-}
-
-@media (max-height: 700px) {
-  .game-section {
-    height: min(70vh, 640px);
-  }
-
-  .footer-section {
-    height: clamp(76px, 14vh, 130px);
   }
 }
