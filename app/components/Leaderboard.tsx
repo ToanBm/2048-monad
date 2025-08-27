@@ -1,28 +1,13 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { getGameLeaderboardFromBlockchain, getPlayerDataPerGame } from '../lib/blockchain';
-import { GAME_CONFIG } from '../lib/game-config';
-import { API_ENDPOINTS } from '../lib/api-config';
 import { useEnv } from './EnvProvider';
 
 interface LeaderboardEntry {
-  address: string;
-  score: number;
-  transactions: number;
   rank: number;
-}
-
-interface BackendLeaderboardEntry {
-  playerAddress: string;
+  player: string;
+  wallet: string;
   score: number;
-  transactions?: number;
-}
-
-interface BackendResponse {
-  success: boolean;
-  leaderboard?: BackendLeaderboardEntry[];
-  message?: string;
 }
 
 interface LeaderboardProps {
@@ -39,122 +24,37 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
     setIsLoading(true);
     setError('');
 
-    // Check environment variable to disable backend
-    if (env.NEXT_PUBLIC_DISABLE_BACKEND === 'true') {
-      // Backend disabled - show notification
-      console.log('🚀 Backend disabled - showing empty leaderboard');
-      setLeaderboard([]);
-      setError('Backend is disabled. Please enable backend to view leaderboard.');
-      setIsLoading(false);
-      return;
-    }
+    try {
+      const response = await fetch('/api/leaderboard', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-          // Call backend API to get leaderboard
-      try {
-        console.log('🔄 Loading leaderboard from backend...');
+      if (response.ok) {
+        const data = await response.json();
         
-        // Try to get from backend first
-        try {
-          const backendResponse = await fetch(API_ENDPOINTS.GET_LEADERBOARD, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+        const entries: LeaderboardEntry[] = [];
+        
+        if (data && Array.isArray(data)) {
+          data.forEach((entry: Record<string, unknown>) => {
+            entries.push({
+              rank: Number(entry.rank || 1),
+              player: String(entry.username || 'Unknown'),
+              wallet: String(entry.walletAddress || 'Unknown'),
+              score: Number(entry.score || 0),
+            });
           });
-
-          if (backendResponse.ok) {
-            const backendData = await backendResponse.json();
-            console.log('✅ Got backend data:', backendData);
-            
-            if (Array.isArray(backendData) && backendData.length > 0) {
-              console.log('🔄 Backend returned player addresses, querying blockchain for scores...');
-              
-              // Backend returns array of addresses, need to query blockchain for scores
-              try {
-                if (!GAME_CONFIG.GAME_ADDRESS) {
-                  throw new Error('Game address not configured');
-                }
-                const blockchainLeaderboard = await getGameLeaderboardFromBlockchain(GAME_CONFIG.GAME_ADDRESS);
-                
-                if (blockchainLeaderboard.length > 0) {
-                  console.log('✅ Got blockchain scores for leaderboard');
-                  const sortedLeaderboard = blockchainLeaderboard
-                    .sort((a, b) => b.score - a.score)
-                    .map((entry, index) => ({
-                      ...entry,
-                      rank: index + 1
-                    }));
-                  
-                  setLeaderboard(sortedLeaderboard);
-                  setIsLoading(false);
-                  return;
-                }
-              } catch (blockchainError) {
-                console.log('⚠️ Error querying blockchain, using backend addresses only');
-              }
-              
-              // Fallback: Show addresses from backend (no scores)
-              const addressOnlyLeaderboard = backendData.map((address, index) => ({
-                address: address,
-                score: 0, // No scores from blockchain
-                transactions: 0,
-                rank: index + 1
-              }));
-              
-              setLeaderboard(addressOnlyLeaderboard);
-              setIsLoading(false);
-              return;
-            }
-          }
-        } catch (backendError) {
-          console.log('⚠️ Backend not available, trying blockchain...');
         }
-
-      // Fallback: Get from blockchain if backend is not available
-      console.log('🔄 Loading leaderboard from blockchain...');
-      if (!GAME_CONFIG.GAME_ADDRESS) {
-        throw new Error('Game address not configured');
-      }
-      const blockchainLeaderboard = await getGameLeaderboardFromBlockchain(GAME_CONFIG.GAME_ADDRESS);
-      
-      if (blockchainLeaderboard.length > 0) {
-        console.log('✅ Got blockchain data, showing leaderboard');
-        const sortedLeaderboard = blockchainLeaderboard.map((entry, index) => ({
-          ...entry,
-          rank: index + 1
-        }));
-        setLeaderboard(sortedLeaderboard);
-      } else {
-        console.log('⚠️ No blockchain data, showing current player only');
         
-        if (playerAddress) {
-          try {
-            if (!GAME_CONFIG.GAME_ADDRESS) {
-              throw new Error('Game address not configured');
-            }
-            const realPlayerData = await getPlayerDataPerGame(playerAddress, GAME_CONFIG.GAME_ADDRESS);
-            
-            const currentPlayerEntry = {
-              address: playerAddress,
-              score: Number(realPlayerData.score),
-              transactions: Number(realPlayerData.transactions),
-              rank: 1
-            };
-            
-            setLeaderboard([currentPlayerEntry]);
-          } catch (err) {
-            console.error('❌ Error getting current player data:', err);
-            setError('Unable to load current player data');
-            setLeaderboard([]);
-          }
-        } else {
-          setLeaderboard([]);
-        }
+        setLeaderboard(entries);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
     } catch (err) {
-      console.error('❌ Error loading leaderboard:', err);
-      setError('Unable to load leaderboard from blockchain');
+      setError('Unable to load leaderboard');
       setLeaderboard([]);
     } finally {
       setIsLoading(false);
@@ -166,6 +66,7 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
   }, [playerAddress]);
 
   const formatAddress = (address: string) => {
+    if (!address || address === 'Unknown') return 'Unknown';
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
@@ -190,76 +91,66 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
   };
 
   return (
-          <div className="leaderboard">
-        <div className="leaderboard-header">
-          <div className="header-controls">
-            <button
-              onClick={loadLeaderboard}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Loading...' : '🔄 Refresh'}
-            </button>
-            <span className="player-count">
-              {leaderboard.length > 0 ? `${leaderboard.length} Players` : 'No Players'}
-            </span>
-          </div>
+    <div className="leaderboard">
+      <div className="leaderboard-header">
+        <div className="header-controls">
+          <button
+            onClick={loadLeaderboard}
+            disabled={isLoading}
+            className="refresh-btn"
+          >
+            {isLoading ? 'Loading...' : '🔄 Refresh'}
+          </button>
+          <span className="player-count">
+            {leaderboard.length > 0 ? `${leaderboard.length} Players` : 'No Players'}
+          </span>
         </div>
+      </div>
 
       {error && (
-        <div>
-          <p>{error}</p>
+        <div className="error-message">
+          {error}
         </div>
       )}
 
-      <div className="leaderboard-table">
-        <div className="table-header">
-          <div className="header-rank">Rank</div>
-          <div className="header-player">Player</div>
-          <div className="header-score">Total Score</div>
-          <div className="header-games">Games</div>
+      {isLoading ? (
+        <div className="loading-message">
+          Loading leaderboard...
         </div>
-
-        {leaderboard.map((entry) => (
-          <div
-            key={entry.address}
-            className={`table-row ${isCurrentPlayer(entry.address) ? 'current-player' : ''}`}
-          >
-            <div className="rank-col">
-              <span className="rank-icon">{getRankIcon(entry.rank)}</span>
-            </div>
-            <div className="player-col">
-              <span>
-                {formatAddress(entry.address)}
-              </span>
-              {isCurrentPlayer(entry.address) && (
-                <span className="current-player-badge">You</span>
-              )}
-            </div>
-            <div className="score-col">
-              <span className={getScoreColor(entry.score)}>
+      ) : leaderboard.length > 0 ? (
+        <div className="leaderboard-list">
+          {leaderboard.map((entry) => (
+            <div
+              key={`${entry.player}-${entry.rank}`}
+              className={`leaderboard-entry ${isCurrentPlayer(entry.wallet) ? 'current-player' : ''}`}
+            >
+              <div className="rank">
+                {getRankIcon(entry.rank)}
+              </div>
+              <div className="player-info">
+                <div className="player-name">{entry.player}</div>
+                <div className="player-wallet">
+                  <a
+                    href={`https://testnet.monadexplorer.com/address/${entry.wallet}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="wallet-link"
+                  >
+                    {formatAddress(entry.wallet)}
+                  </a>
+                </div>
+              </div>
+              <div className={`score ${getScoreColor(entry.score)}`}>
                 {entry.score.toLocaleString()}
-              </span>
+              </div>
             </div>
-            <div className="transactions-col">
-              <span>{entry.transactions}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {leaderboard.length === 0 && !isLoading && (
-        <div className="empty-state">
-          <p>
-            {playerAddress ? 'No ranking data available for this game yet' : 'Please login to view leaderboard'}
-          </p>
+          ))}
+        </div>
+      ) : (
+        <div className="empty-message">
+          No leaderboard data available
         </div>
       )}
-
-      <div className="leaderboard-info">
-        <p>
-          💡 Leaderboard data is fetched directly from Monad Games blockchain!
-        </p>
-      </div>
     </div>
   );
 }

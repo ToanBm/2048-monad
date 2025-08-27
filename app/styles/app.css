@@ -71,8 +71,8 @@
 .user-btn {
   background: var(--violet-600);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 12px;
-  padding: clamp(8px, 1vw, 13px) clamp(13px, 1.4vw, 26px);
+  border-radius: 8px;
+  padding: clamp(8px, 1vw, 13px) 2px clamp(8px, 1vw, 13px) clamp(13px, 1.4vw, 26px);
   font-size: clamp(14px, 1vw, 18px);
   height: clamp(38px, 5vh, 56px);
   font-weight: 700;
@@ -81,6 +81,21 @@
   align-items: center;
   gap: 10px;
   transition: all .2s ease;
+}
+
+/* Login button styling (when not connected) */
+.user-btn:only-child {
+  background: var(--violet-500);
+  border-color: rgba(255, 255, 255, 0.8);
+  padding: clamp(8px, 1vw, 13px) clamp(52px, 1.4vw, 104px);
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.user-btn:only-child:hover {
+  background: var(--violet-400);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
 }
 
 .user-btn:hover {
@@ -93,6 +108,23 @@
   font-weight: 600;
 }
 
+/* Logout button styling */
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.logout-icon {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+  transition: filter 0.2s ease;
+}
+
 /* ========= WALLET BUTTON ========= */
 .wallet-btn {
   position: relative;
@@ -101,7 +133,7 @@
 .wallet-btn button {
   background: var(--violet-600);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: clamp(8px, 1vw, 13px) clamp(13px, 1.4vw, 26px);
   font-size: clamp(14px, 1vw, 18px);
   height: clamp(38px, 5vh, 56px);
@@ -123,9 +155,9 @@
   right: 0;
   background: #10b981;
   color: white;
-  padding: 12px;
+  padding: 10px;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 10px;
   font-weight: 700;
   box-shadow: var(--shadow-md);
   z-index: 30;
@@ -158,9 +190,8 @@
 }
 
 .footer-section {
-  height: clamp(56px, 10vh, 88px);
-  padding: 12px 20px;
-  border-top: 1px solid rgba(255, 255, 255, 1);
+  height: clamp(56px, 8vh, 88px);
+  padding: 20px;
   margin-top: auto;
   display: flex;
   flex-direction: column;
@@ -171,7 +202,7 @@
 
 .footer-text {
   color: #3b0764;
-  font-size: clamp(16px, 1.2vw, 24px);
+  font-size: clamp(14px, 1.2vw, 20px);
   font-weight: 700;
   margin: 0;
 }
@@ -187,8 +218,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(40px, 2vw, 56px);
-  height: clamp(40px, 2vw, 56px);
+  width: clamp(36px, 2vw, 56px);
+  height: clamp(36px, 2vw, 56px);
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -208,32 +239,32 @@
 
 /* ========= LEADERBOARD POPUP ========= */
 .leaderboard-popup-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, .7);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(8px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1000 !important;
 }
 
 .leaderboard-popup-content {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: var(--shadow-xl);
-  width: clamp(320px, 92vw, 960px);
-  max-height: min(90vh, 860px);
-  overflow: hidden;
+  background: #fff !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-xl) !important;
+  width: clamp(320px, 92vw, 960px) !important;
+  max-height: min(90vh, 860px) !important;
+  overflow: hidden !important;
 }
 
 .popup-header {
   background: var(--violet-600);
   color: #fff;
-  padding: 16px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   border-radius: 16px 16px 0 0;
   position: relative;
 }
@@ -249,11 +280,23 @@
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
-  font-size: 28px;
+  font-size: 18px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.popup-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }
 
 .popup-body {
@@ -299,4 +342,39 @@
   .transactions-col {
     display: none;
   }
+}
+
+/* Monad ID display styling */
+.monad-id-display {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.6);
+  text-underline-offset: 2px;
+}
+
+.monad-id-display:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+  text-decoration-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Static display for when ID is already shown (no hover effects) */
+.monad-id-display-static {
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: default;
+}
+
+.link-icon {
+  margin-left: 6px;
+  font-size: 12px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.monad-id-display:hover .link-icon {
+  opacity: 1;
 }

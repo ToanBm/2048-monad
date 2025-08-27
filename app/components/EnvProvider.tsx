@@ -19,11 +19,9 @@ export function EnvProvider({ children }: { children: React.ReactNode }) {
     fetch('/api/env')
       .then(res => res.json())
       .then(data => {
-        console.log('🔍 EnvProvider: Fetched env vars:', data);
         setEnv(data);
       })
       .catch(error => {
-        console.error('❌ EnvProvider: Failed to fetch env vars:', error);
         // Fallback to process.env for development
         setEnv({
           NEXT_PUBLIC_PRIVY_APP_ID: process.env.NEXT_PUBLIC_PRIVY_APP_ID || '',

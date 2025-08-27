@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import LeaderboardPopup from "./LeaderboardPopup";
-import { API_ENDPOINTS } from "../lib/api-config";
 import { useEnv } from "./EnvProvider";
 
 interface Tile {
@@ -171,7 +170,6 @@ export default function Game({ playerAddress, onScoreChange }: GameProps) {
       canMove: true,
     }));
     setLastSavedScore(0); // Reset last saved score when starting new game
-    console.log("Game 2048 initialized");
   }, []);
 
   const move = useCallback((dir: "left" | "right" | "up" | "down") => {
@@ -379,72 +377,33 @@ export default function Game({ playerAddress, onScoreChange }: GameProps) {
               return;
             }
 
-            // Check environment variable to disable backend
-            console.log(
-              "🔍 ENV CHECK:",
-              env.NEXT_PUBLIC_DISABLE_BACKEND
-            );
-            if (env.NEXT_PUBLIC_DISABLE_BACKEND === "true") {
-              // Mock success - don't call backend
-              alert(
-                `✅ Score saved successfully! (Backend disabled)\nScore: ${gameState.score}`
-              );
-              setLastSavedScore(gameState.score);
-              console.log("🚀 Backend disabled - using mock data");
-            } else {
-              // Call real backend
-              try {
-                // Import function from score-api
-                const { submitPlayerScore } = await import("../lib/score-api");
-                const result = await submitPlayerScore(
+            try {
+              // Call API to save score (private key protected on server)
+              const response = await fetch('/api/save-score', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                   playerAddress,
-                  gameState.score,
-                  1
-                );
+                  scoreAmount: gameState.score
+                })
+              });
 
-                if (result.success) {
-                  alert(
-                    `✅ Score saved successfully!\nScore: ${gameState.score}\nTransaction: ${result.transactionHash}`
-                  );
+              const result = await response.json();
 
-                  // Update lastSavedScore to avoid saving again
-                  setLastSavedScore(gameState.score);
-
-                  // Add player to backend list only (no smart contract call)
-                  try {
-                    const addPlayerResponse = await fetch(
-                      API_ENDPOINTS.ADD_PLAYER_TO_LIST,
-                      {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          playerAddress: playerAddress,
-                          // No score data needed - only adding to list
-                        }),
-                      }
-                    );
-
-                    if (addPlayerResponse.ok) {
-                      console.log(
-                        "✅ Player added to backend list successfully"
-                      );
-                    }
-                  } catch (addPlayerError) {
-                    console.log(
-                      "⚠️ Error adding player to backend list:",
-                      addPlayerError
-                    );
-                  }
-                } else {
-                  alert(`❌ Failed to save score: ${result.error}`);
-                }
-              } catch (error) {
+              if (result.success) {
                 alert(
-                  `❌ Error saving score: ${
-                    error instanceof Error ? error.message : "Unknown error"
-                  }`
+                  `✅ Score saved successfully!\nScore: ${gameState.score}\nTransaction: ${result.transactionHash.slice(0, 6)}...${result.transactionHash.slice(-4)}`
                 );
+                setLastSavedScore(gameState.score);
+              } else {
+                throw new Error(result.error || 'Failed to save score');
               }
+              
+            } catch (error) {
+              console.error("❌ Failed to save score:", error);
+              alert(`Failed to save score: ${error instanceof Error ? error.message : 'Unknown error'}`);
             }
           }}
           disabled={

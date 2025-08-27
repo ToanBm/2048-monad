@@ -5,7 +5,7 @@
   border: 1px solid rgba(255, 255, 255, .5);
   border-radius: 14px;
   /* giảm nhẹ */
-  padding: clamp(12px, 1.6vmin, 20px);
+  padding: clamp(24px, 3.2vmin, 40px);
   /* -20% */
   box-shadow: var(--shadow-xl);
   width: clamp(280px, 48vmin, 520px);
@@ -37,11 +37,11 @@
   /* -20% */
   color: #fff;
   flex: 1 1 auto;
-  min-width: 100px;
+  min-width: 50px;
 }
 
 .score-button strong {
-  font-size: clamp(10px, 3vmin, 12px);
+  font-size: clamp(10px, 30vmin, 12px);
 }
 
 .score-value {
@@ -71,6 +71,7 @@
   justify-content: center;
   font-weight: 900;
   font-size: clamp(14px, 3vmin, 22px);
+  border: 1px solid rgba(255, 255, 255, .5);
   /* -20% */
   box-shadow: var(--shadow-sm);
   animation: tileAppear .25s ease-out;

@@ -75,35 +75,5 @@ export async function getPlayerDataPerGame(playerAddress: string, gameAddress: s
   }
 }
 
-// Get leaderboard from backend API (real, not hardcoded)
-export async function getGameLeaderboardFromBlockchain(gameAddress: string): Promise<Array<{
-  address: string;
-  score: number;
-  transactions: number;
-}>> {
-  try {
-    console.log('🎯 Getting leaderboard from backend API for game:', gameAddress);
-    
-    // Call backend API to get real leaderboard
-    const response = await fetch('http://localhost:3001/api/get-leaderboard');
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const leaderboard = await response.json();
-    
-    console.log('✅ Got leaderboard from backend:', leaderboard.length, 'players');
-    leaderboard.forEach((player: { address: string; score: number; transactions: number }, index: number) => {
-      console.log(`🏆 Rank ${index + 1}: ${player.address.slice(0, 6)}...${player.address.slice(-4)} - Score: ${player.score}, Transactions: ${player.transactions}`);
-    });
-    
-    return leaderboard;
-    
-  } catch (error) {
-    console.error('❌ Error getting leaderboard from backend:', error);
-    // Return empty array if there's an error
-    return [];
-  }
-}
+
 

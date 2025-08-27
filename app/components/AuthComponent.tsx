@@ -35,9 +35,13 @@ function PrivyAuth({ onAddressChange }: Props) {
   }, [user, env.NEXT_PUBLIC_MONAD_APP_ID]);
 
   const accountAddress = useMemo(() => {
+    // Lấy từ cross app account (Monad Games ID)
     const addr = crossAppAccount?.embeddedWallets?.[0]?.address;
+    
+
+    
     return typeof addr === "string" ? addr : "";
-  }, [crossAppAccount]);
+  }, [crossAppAccount, user]);
 
   const [prevAddr, setPrevAddr] = useState<string>("");
 
@@ -47,6 +51,13 @@ function PrivyAuth({ onAddressChange }: Props) {
       onAddressChange(accountAddress);
     }
   }, [accountAddress, prevAddr, onAddressChange]);
+
+  // Tự động tạo cross app account khi user login
+  useEffect(() => {
+    if (authenticated && user && !crossAppAccount) {
+      // Privy sẽ tự động tạo cross app account khi cần
+    }
+  }, [authenticated, user, crossAppAccount]);
 
   const hasMonadAccount = !!crossAppAccount;
   const {
@@ -70,6 +81,11 @@ function PrivyAuth({ onAddressChange }: Props) {
     }).catch(() => {});
   }, [accountAddress]);
 
+  const handleCreateMonadId = useCallback(() => {
+    // Chỉ mở link tạo Monad ID khi chưa có
+    window.open(env.NEXT_PUBLIC_MONAD_PORTAL_URL, '_blank');
+  }, [env.NEXT_PUBLIC_MONAD_PORTAL_URL]);
+
   if (!ready) return <div className="status-message info">Loading…</div>;
 
   // === NOT CONNECTED: only 1 "Connect" button ===
@@ -87,26 +103,9 @@ function PrivyAuth({ onAddressChange }: Props) {
     );
   }
 
-  // === CONNECTED: 2 buttons (Monad ID, Embedded Wallet) ===
+  // === CONNECTED: 2 buttons (Embedded Wallet, Monad ID) ===
   return (
     <div className="auth-actions-row">
-      <div className="user-btn">
-        <span>
-          {isLoadingUser
-            ? "Welcome: …"
-            : hasUsername && monadUser?.username
-            ? `@${monadUser.username}`
-            : "@Monad ID"}
-        </span>
-        <button
-          onClick={logout}
-          aria-label="Sign out"
-          title="Sign out"
-        >
-          [→]
-        </button>
-      </div>
-
       {/* Embedded Wallet button - click to copy */}
       <div className="wallet-btn">
         <button
@@ -120,6 +119,35 @@ function PrivyAuth({ onAddressChange }: Props) {
             Wallet copied!
           </div>
         )}
+      </div>
+
+      <div className="user-btn">
+        {isLoadingUser ? (
+          <span className="monad-id-display">Welcome: …</span>
+        ) : hasUsername && monadUser?.username ? (
+          // Khi đã có ID, chỉ hiển thị text, không có link
+          <span className="monad-id-display-static">
+            @{monadUser.username}
+          </span>
+        ) : (
+          // Khi chưa có ID, có thể click để tạo
+          <span 
+            onClick={handleCreateMonadId}
+            className="monad-id-display"
+            title="Click to create Monad ID"
+            style={{ cursor: 'pointer' }}
+          >
+            Create Monad ID
+          </span>
+        )}
+        <button
+          onClick={logout}
+          aria-label="Sign out"
+          title="Sign out"
+          className="logout-btn"
+        >
+          <img src="/logout.svg" alt="Logout" className="logout-icon" />
+        </button>
       </div>
     </div>
   );

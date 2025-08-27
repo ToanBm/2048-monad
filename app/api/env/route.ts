@@ -1,8 +1,4 @@
 export async function GET() {
-  // Log để debug
-  console.log('🔍 API /env - process.env keys:', Object.keys(process.env));
-  console.log('🔍 API /env - NEXT_PUBLIC_PRIVY_APP_ID:', process.env.NEXT_PUBLIC_PRIVY_APP_ID);
-  
   const envVars = {
     NEXT_PUBLIC_PRIVY_APP_ID: process.env.NEXT_PUBLIC_PRIVY_APP_ID || '',
     NEXT_PUBLIC_MONAD_APP_ID: process.env.NEXT_PUBLIC_MONAD_APP_ID || '',
@@ -12,6 +8,5 @@ export async function GET() {
     NEXT_PUBLIC_DISABLE_BACKEND: process.env.NEXT_PUBLIC_DISABLE_BACKEND || '',
   };
   
-  console.log('🔍 API /env - returning:', envVars);
   return Response.json(envVars);
 }
