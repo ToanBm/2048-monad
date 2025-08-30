@@ -5,10 +5,10 @@
   border: 1px solid rgba(255, 255, 255, .5);
   border-radius: 14px;
   /* giảm nhẹ */
-  padding: clamp(24px, 3.2vmin, 40px);
+  padding: clamp(28px, 3.7vmin, 46px); /* Tăng 15% */
   /* -20% */
   box-shadow: var(--shadow-xl);
-  width: clamp(280px, 48vmin, 520px);
+  width: clamp(322px, 55vmin, 598px); /* Tăng 15% */
   /* -20% */
   margin: 0 auto;
   backdrop-filter: blur(10px);
@@ -19,9 +19,9 @@
 .score-panel {
   display: flex;
   justify-content: space-between;
-  margin-bottom: clamp(10px, 1.6vmin, 18px);
+  margin-bottom: clamp(12px, 1.8vmin, 21px); /* Tăng 15% */
   /* -20% */
-  gap: clamp(4px, 0.8vmin, 8px);
+  gap: clamp(5px, 0.9vmin, 9px); /* Tăng 15% */
   flex-wrap: wrap;
 }
 
@@ -53,13 +53,13 @@
 .game-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: clamp(4px, 1vmin, 8px);
+  gap: clamp(5px, 1.15vmin, 9px); /* Tăng 15% */
   /* -20% */
   background: var(--violet-100);
   border: 1px solid rgba(255, 255, 255, .5);
-  padding: clamp(4px, 1vmin, 8px);
+  padding: clamp(5px, 1.15vmin, 9px); /* Tăng 15% */
   border-radius: 10px;
-  margin-bottom: clamp(12px, 1.8vmin, 18px);
+  margin-bottom: clamp(14px, 2.1vmin, 21px); /* Tăng 15% */
   box-shadow: inset 0 3px 6px rgba(0, 0, 0, .15);
 }
 
@@ -74,13 +74,16 @@
   border: 1px solid rgba(255, 255, 255, .5);
   /* -20% */
   box-shadow: var(--shadow-sm);
-  animation: tileAppear .25s ease-out;
+  animation: tileAppear .2s ease-out;
+  /* Bỏ transition để game responsive như 2048 gốc */
 }
 
 .grid-cell.empty {
   background: var(--violet-100);
   color: transparent;
   border: 1px solid rgba(255, 255, 255, .5);
+  /* Bỏ animation cho ô trống */
+  animation: none;
 }
 
 /* Tile colors */
@@ -209,5 +212,5 @@
 }
 
 .grid-cell.merged {
-  animation: tileMerge .3s ease-out;
+  animation: tileMerge .25s ease-out;
 }

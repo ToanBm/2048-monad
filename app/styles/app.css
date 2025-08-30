@@ -29,7 +29,7 @@
   margin: 0;
   padding: 10px 0;
   background: var(--violet-300);
-  overflow-x: hidden;
+  overflow-x: visible; /* Cho phép popup rộng hơn */
 }
 
 /* ========= HEADER ========= */
@@ -38,8 +38,8 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 1);
-  height: clamp(56px, 10vh, 80px);
-  padding: 0px 20px;
+  height: clamp(56px, 8vh, 80px);
+  padding: 10px 20px;
   flex-shrink: 0;
 }
 
@@ -54,10 +54,25 @@
   height: clamp(48px, 4vw, 72px);
 }
 
+.logo-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Bạn có thể edit màu background, border, etc. ở đây */
+  background-color: #ede9fe; /* Edit màu này */
+  border-radius: 8px; /* Edit border radius */
+  transition: all 0.2s ease;
+}
+
+
 .logo-text {
   font-size: clamp(24px, 2vw, 40px);
   font-weight: 800;
-  color: #fff;
+  color: var(--violet-600);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, .3);
 }
 
@@ -190,19 +205,19 @@
 }
 
 .footer-section {
-  height: clamp(56px, 8vh, 88px);
-  padding: 20px;
+  height: clamp(50px, 7.2vh, 79px); /* Giảm 10% */
+  padding: 18px; /* Giảm 10% */
   margin-top: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 7px; /* Giảm 10% */
 }
 
 .footer-text {
   color: #3b0764;
-  font-size: clamp(14px, 1.2vw, 20px);
+  font-size: clamp(13px, 1.1vw, 18px); /* Giảm 10% */
   font-weight: 700;
   margin: 0;
 }
@@ -218,11 +233,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(36px, 2vw, 56px);
-  height: clamp(36px, 2vw, 56px);
+  width: clamp(32px, 1.8vw, 50px); /* Giảm 10% */
+  height: clamp(32px, 1.8vw, 50px); /* Giảm 10% */
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  border-radius: 7px; /* Giảm 10% */
   transition: .2s ease;
 }
 
@@ -233,46 +248,95 @@
 }
 
 .social-button img {
-  width: clamp(20px, 2.2vw, 36px);
-  height: clamp(20px, 2.2vw, 36px);
+  width: clamp(18px, 2vw, 32px); /* Giảm 10% */
+  height: clamp(18px, 2vw, 32px); /* Giảm 10% */
 }
 
-/* ========= LEADERBOARD POPUP ========= */
+/* ================================ LEADERBOARD POPUP ================================ */
 .leaderboard-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* Tăng z-index để đảm bảo hiển thị trên cùng */
+  width: 100vw; /* Sử dụng viewport width */
+  height: 100vh; /* Sử dụng viewport height */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Đảm bảo popup không bị giới hạn bởi container cha */
   position: fixed !important;
-  inset: 0 !important;
-  background: rgba(0, 0, 0, 0.7) !important;
-  backdrop-filter: blur(8px) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  z-index: 1000 !important;
 }
 
 .leaderboard-popup-content {
-  background: #fff !important;
-  border-radius: 16px !important;
-  box-shadow: var(--shadow-xl) !important;
-  width: clamp(320px, 92vw, 960px) !important;
-  max-height: min(90vh, 860px) !important;
-  overflow: hidden !important;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow-xl);
+  width: clamp(800px, 80vw, 1200px);
+  max-height: 87.5vh; /* Tăng từ 70vh lên 87.5vh (tăng 25%) */
+  overflow: hidden;
+  position: relative;
+  /* Đảm bảo popup content không bị giới hạn */
+  max-width: 60vw;
+  max-height: 93.75vh; /* Tăng từ 75vh lên 93.75vh (tăng 25%) */
 }
 
 .popup-header {
   background: var(--violet-600);
   color: #fff;
-  padding: 16px 20px;
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 16px 16px 0 0;
+  border-radius: 0;
   position: relative;
 }
 
+.popup-header-left {
+  display: flex;
+  flex-direction: row; /* Thay đổi từ column thành row */
+  align-items: center; /* Căn giữa theo chiều ngang */
+  gap: 20px; /* Tăng gap để các elements cách xa nhau hơn */
+}
+
 .popup-title {
-  font-size: clamp(20px, 2.2vmin, 28px);
+  font-size: clamp(18px, 2vmin, 24px);
   font-weight: 900;
   margin: 0;
+  white-space: nowrap; /* Không xuống dòng */
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.refresh-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.player-count {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
 }
 
 .popup-close-btn {
@@ -294,53 +358,318 @@
   transition: all 0.2s ease;
 }
 
-.popup-close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
+.popup-body {
+  padding: 0 clamp(16px, 2.5vmin, 24px) clamp(16px, 2.5vmin, 24px); /* Bỏ padding top, giữ left/right/bottom */
+  max-height: 62.5vh; /* Tăng từ 50vh lên 62.5vh (tăng 25%) */
+  overflow: hidden;
+  background: var(--violet-300);
 }
 
-.popup-body {
-  padding: clamp(16px, 2vmin, 24px);
-  max-height: 60vh;
-  overflow-y: auto;
-  background: var(--violet-300);
+/* Leaderboard container */
+.leaderboard {
+  width: 100%;
+}
+
+.leaderboard-header {
+  margin-bottom: 20px;
+}
+
+.error-message,
+.loading-message,
+.empty-message {
+  text-align: center;
+  padding: 20px;
+  color: var(--violet-700);
+  font-weight: 500;
+}
+
+.error-message {
+  color: #dc2626;
+}
+
+.loading-message {
+  color: var(--violet-600);
 }
 
 .leaderboard-table {
   background: #fff;
   border-radius: 8px;
-  margin-top: 16px;
-}
-
-.table-header,
-.table-row {
-  display: grid;
-  grid-template-columns: 80px minmax(0, 1fr) 120px 100px;
-  gap: 12px;
-  padding: 12px;
-  font-weight: 800;
+  margin-top: 12px;
+  height: 100%;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .table-header {
   background: var(--violet-600);
   color: #fff;
+  border-bottom: 2px solid var(--violet-700);
+  font-weight: 800;
+  display: grid;
+  grid-template-columns: 100px 1fr 250px 120px;
+  gap: 0;
+  padding: 16px 24px; /* Giữ nguyên */
+  min-height: 56px; /* Giữ nguyên */
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.table-rows-container {
+  overflow-y: auto;
+  max-height: calc(62.5vh - 120px); /* Tăng từ calc(50vh - 120px) lên calc(62.5vh - 120px) */
 }
 
 .table-row {
   color: var(--violet-700);
-  border-bottom: 1px solid #e5e7eb;
+  transition: background 0.15s ease;
+  display: grid;
+  grid-template-columns: 100px 1fr 250px 120px;
+  gap: 0;
+  padding: 16px 24px; /* Giữ nguyên */
+  font-weight: 700;
+  border-bottom: 2px solid #e5e7eb;
+  min-height: 56px; /* Giữ nguyên */
+  align-items: center;
 }
 
-@media (max-width:1024px) {
+.table-row:hover {
+  background: #f8fafc;
+}
+
+.table-row.current-player {
+  background: rgba(139, 92, 246, 0.1);
+  border-left: 4px solid var(--violet-600);
+}
+
+/* Rank column styling */
+.rank-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(18px, 2vmin, 24px); /* Tăng từ 16px lên 18px để đồng bộ */
+  font-weight: 900;
+  min-width: 60px; /* Đảm bảo width nhất quán */
+}
+
+.rank-emoji {
+  font-size: clamp(20px, 2.2vmin, 28px); /* Tăng từ 18px lên 20px để đồng bộ */
+  margin-right: 0; /* Bỏ margin để căn giữa hoàn hảo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-number {
+  font-size: clamp(18px, 2vmin, 24px); /* Tăng từ 14px lên 18px để đồng bộ với emoji */
+  color: var(--violet-600);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Player column styling */
+.player-column {
+  font-weight: 700;
+  font-size: clamp(16px, 1.8vmin, 22px); /* Tăng từ 14px lên 16px để đồng bộ */
+  color: var(--violet-700);
+}
+
+/* Wallet column styling */
+.wallet-column {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(14px, 1.6vmin, 18px); /* Tăng từ 12px lên 14px để đồng bộ */
+  color: var(--violet-600);
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.wallet-link {
+  color: var(--violet-600);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.wallet-link:hover {
+  color: var(--violet-800);
+  text-decoration: underline;
+}
+
+/* Score column styling */
+.score-column {
+  text-align: right;
+  font-weight: 800;
+  font-size: clamp(18px, 2vmin, 24px); /* Tăng từ 16px lên 18px để đồng bộ */
+  color: var(--violet-700);
+}
+
+/* Score color classes */
+.text-yellow-400 { color: #fbbf24; }
+.text-blue-400 { color: #60a5fa; }
+.text-green-400 { color: #4ade80; }
+.text-gray-400 { color: #9ca3af; }
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 80px 1fr 200px 100px;
+    padding: 14px 20px;
+  }
+  
+  .leaderboard-popup-content {
+    width: 90vw;
+    max-height: 75vh;
+  }
+  
+  .table-rows-container {
+    max-height: calc(62.5vh - 100px);
+  }
+  
+  .rank-column {
+    font-size: clamp(16px, 1.8vmin, 22px);
+  }
+  
+  .rank-emoji {
+    font-size: clamp(18px, 2vmin, 26px);
+  }
+  
+  .rank-number {
+    font-size: clamp(16px, 1.8vmin, 22px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 70px 1fr 180px 90px;
+    padding: 12px 16px;
+  }
+  
+  .wallet-column {
+    font-size: clamp(13px, 1.5vmin, 17px);
+  }
+  
+  .leaderboard-popup-content {
+    width: 95vw;
+    max-height: 80vh;
+  }
+  
+  .table-rows-container {
+    max-height: calc(62.5vh - 90px);
+  }
+  
+  .rank-column {
+    font-size: clamp(15px, 1.7vmin, 20px);
+  }
+  
+  .rank-emoji {
+    font-size: clamp(17px, 1.9vmin, 24px);
+  }
+  
+  .rank-number {
+    font-size: clamp(15px, 1.7vmin, 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .leaderboard-popup-content {
+    width: 95vw;
+    margin: 5px;
+    max-height: 85vh;
+  }
 
   .table-header,
   .table-row {
-    grid-template-columns: 70px minmax(0, 1fr) 120px;
+    grid-template-columns: 50px 1fr 70px;
+    padding: 10px 14px;
   }
 
-  .header-games,
-  .transactions-col {
+  .wallet-column {
     display: none;
+  }
+  
+  .rank-column {
+    font-size: clamp(14px, 1.6vmin, 18px);
+  }
+  
+  .rank-emoji {
+    font-size: clamp(16px, 1.8vmin, 22px);
+  }
+  
+  .rank-number {
+    font-size: clamp(14px, 1.6vmin, 18px);
+  }
+  
+  .player-column {
+    font-size: clamp(14px, 1.6vmin, 18px);
+  }
+  
+  .score-column {
+    font-size: clamp(16px, 1.8vmin, 20px);
+  }
+  
+  .popup-header {
+    padding: 14px 18px;
+  }
+  
+  .popup-body {
+    padding: clamp(14px, 2vmin, 20px);
+  }
+  
+  .table-rows-container {
+    max-height: calc(62.5vh - 80px);
+  }
+}
+
+@media (max-width: 480px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 45px 1fr 65px;
+    padding: 8px 10px;
+    min-height: 48px;
+  }
+  
+  .rank-column {
+    font-size: clamp(12px, 1.4vmin, 16px);
+  }
+  
+  .rank-emoji {
+    font-size: clamp(14px, 1.6vmin, 18px);
+  }
+  
+  .rank-number {
+    font-size: clamp(12px, 1.4vmin, 16px);
+  }
+  
+  .player-column {
+    font-size: clamp(12px, 1.4vmin, 16px);
+  }
+  
+  .score-column {
+    font-size: clamp(14px, 1.6vmin, 18px);
+  }
+  
+  .leaderboard-popup-content {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+  
+  .popup-header {
+    padding: 10px 14px;
+  }
+  
+  .popup-body {
+    padding: 10px 14px;
+  }
+  
+  .table-rows-container {
+    max-height: calc(62.5vh - 70px);
   }
 }
 

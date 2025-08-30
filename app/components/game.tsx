@@ -112,6 +112,18 @@ function getMaxTile(board: (Tile | null)[][]): number {
   return max;
 }
 
+/** NEW: get the total score (sum of all tile values) on the board */
+function getTotalScore(board: (Tile | null)[][]): number {
+  let total = 0;
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      const v = board[r][c]?.value ?? 0;
+      total += v;
+    }
+  }
+  return total;
+}
+
 /* component */
 export default function Game({ playerAddress, onScoreChange }: GameProps) {
   const env = useEnv();
@@ -158,12 +170,12 @@ export default function Game({ playerAddress, onScoreChange }: GameProps) {
     spawnRandom(newBoard);
     spawnRandom(newBoard);
 
-    // score = maximum tile value right after starting
-    const maxNow = getMaxTile(newBoard);
+    // score = total score (sum of all tile values) right after starting
+    const totalScore = getTotalScore(newBoard);
 
     setGameState((prev) => ({
       board: newBoard,
-      score: maxNow, // CHANGED
+      score: totalScore, // CHANGED: Use total score instead of max tile
       bestScore: prev.bestScore, // keep existing best score
       gameOver: false,
       won: false,
@@ -182,7 +194,7 @@ export default function Game({ playerAddress, onScoreChange }: GameProps) {
       if (dir === "down") working = rotateRight(working);
 
       let moved = false;
-      let totalGained = 0; // still calculate to avoid affecting other code, but not used for score
+      let totalGained = 0; // still calculate to avoid affecting other code, but not used for score calculation
       for (let r = 0; r < SIZE; r++) {
         const { line, gained: g, changed } = compressLineLeft(working[r]);
         working[r] = line;
@@ -198,9 +210,9 @@ export default function Game({ playerAddress, onScoreChange }: GameProps) {
 
       spawnRandom(working);
 
-      // score = maximum tile value after moving + spawning
-      const currentMax = getMaxTile(working);
-      const best = Math.max(prev.bestScore, currentMax);
+      // score = total score (sum of all tile values) after moving + spawning
+      const currentTotalScore = getTotalScore(working);
+      const best = Math.max(prev.bestScore, currentTotalScore);
       if (best > prev.bestScore) saveBestScore(best);
 
       const won = working.some((row) => row.some((t) => t && t.value === 2048));
@@ -209,7 +221,7 @@ export default function Game({ playerAddress, onScoreChange }: GameProps) {
       return {
         ...prev,
         board: working,
-        score: currentMax, // CHANGED
+        score: currentTotalScore, // CHANGED: Use total score instead of max tile
         bestScore: best,
         won,
         canMove,
@@ -309,147 +321,148 @@ export default function Game({ playerAddress, onScoreChange }: GameProps) {
   }
 
   return (
-    <div className="game-container">
-      {/* Scores */}
-      <div className="score-panel" aria-live="polite">
-        <button
-          className="score-button current-score"
-          aria-label={`Current score ${gameState.score}`}
-        >
-          <strong>Score:</strong>
-          <span className="score-value">{gameState.score}</span>
-        </button>
-
-        {/* Leaderboard Button */}
-        <button
-          onClick={() => setIsLeaderboardOpen(true)}
-          className="score-button leaderboard-btn"
-          aria-label="Open leaderboard"
-        >
-          <span className="score-value">Leaderboard</span>
-        </button>
-
-        <button
-          className="score-button best-score"
-          aria-label={`Best score ${gameState.bestScore}`}
-        >
-          <strong>Best:</strong>
-          <span className="score-value">{gameState.bestScore}</span>
-        </button>
-      </div>
-
-      {/* Grid */}
-      <div className="game-grid" role="grid" aria-label="2048 board">
-        {gameState.board.flat().map((tile, idx) => (
-          <div
-            key={(tile?.id ?? "empty") + "-" + idx}
-            className={`grid-cell ${tile ? `tile-${tile.value}` : "empty"}`}
-            role="gridcell"
-            aria-label={tile ? `Tile ${tile.value}` : "Empty cell"}
+    <>
+      <div className="game-container">
+        {/* Scores */}
+        <div className="score-panel" aria-live="polite">
+          <button
+            className="score-button current-score"
+            aria-label={`Current score ${gameState.score}`}
           >
-            {tile?.value ?? ""}
-          </div>
-        ))}
-      </div>
+            <strong>Score:</strong>
+            <span className="score-value">{gameState.score}</span>
+          </button>
 
-      {/* Controls */}
-      <div className="control-panel" aria-label="Controls">
-        <button onClick={initializeGame} className="control-button new-game">
-          New Game
-        </button>
+          {/* Leaderboard Button */}
+          <button
+            onClick={() => setIsLeaderboardOpen(true)}
+            className="score-button leaderboard-btn"
+            aria-label="Open leaderboard"
+          >
+            <span className="score-value">Leaderboard</span>
+          </button>
 
-        <button
-          onClick={async () => {
-            if (!playerAddress) {
-              alert("Please login to save your score!");
-              return;
-            }
-            if (gameState.score === 0) {
-              alert("Please play the game and achieve a score before saving!");
-              return;
-            }
+          <button
+            className="score-button best-score"
+            aria-label={`Best score ${gameState.bestScore}`}
+          >
+            <strong>Best:</strong>
+            <span className="score-value">{gameState.bestScore}</span>
+          </button>
+        </div>
 
-            // Check if current score has already been saved
-            if (gameState.score <= lastSavedScore) {
-              alert(
-                "This score has already been saved! Please play more to achieve a higher score."
-              );
-              return;
-            }
+        {/* Grid */}
+        <div className="game-grid" role="grid" aria-label="2048 board">
+          {gameState.board.flat().map((tile, idx) => (
+            <div
+              key={(tile?.id ?? "empty") + "-" + idx}
+              className={`grid-cell ${tile ? `tile-${tile.value}` : "empty"}`}
+              role="gridcell"
+              aria-label={tile ? `Tile ${tile.value}` : "Empty cell"}
+            >
+              {tile?.value ?? ""}
+            </div>
+          ))}
+        </div>
 
-            try {
-              // Call API to save score (private key protected on server)
-              const response = await fetch('/api/save-score', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  playerAddress,
-                  scoreAmount: gameState.score
-                })
-              });
-
-              const result = await response.json();
-
-              if (result.success) {
-                alert(
-                  `✅ Score saved successfully!\nScore: ${gameState.score}\nTransaction: ${result.transactionHash.slice(0, 6)}...${result.transactionHash.slice(-4)}`
-                );
-                setLastSavedScore(gameState.score);
-              } else {
-                throw new Error(result.error || 'Failed to save score');
+        {/* Controls */}
+        <div className="control-panel" aria-label="Controls">
+          <button onClick={initializeGame} className="control-button new-game">
+            New Game
+          </button>
+          <button
+            onClick={async () => {
+              if (!playerAddress) {
+                alert("Please login to save your score!");
+                return;
               }
-              
-            } catch (error) {
-              console.error("❌ Failed to save score:", error);
-              alert(`Failed to save score: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            }
-          }}
-          disabled={
-            !playerAddress ||
-            gameState.score === 0 ||
-            gameState.score <= lastSavedScore
-          }
-          className="control-button save-score"
-        >
-          Save Score
-        </button>
-      </div>
+              if (gameState.score === 0) {
+                alert("Please play the game and achieve a score before saving!");
+                return;
+              }
 
-      {/* Overlay for win / game over */}
-      {(gameState.won || gameState.gameOver) && (
-        <div
-          className="overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label={gameState.won ? "Victory" : "Game Over"}
-        >
-          <div className="overlay-card">
-            <p className="overlay-text">
-              {gameState.won
-                ? `🎉 Congratulations! You reached 2048. (Score: ${gameState.score})`
-                : `😔 Game Over! Final Score: ${gameState.score}`}
-            </p>
-            <div className="overlay-actions">
-              <button
-                onClick={initializeGame}
-                className="control-button new-game"
-              >
-                New Game
-              </button>
-              {/* If you want a "Continue" button later, add another button here. */}
+              // Check if current score has already been saved
+              if (gameState.score <= lastSavedScore) {
+                alert(
+                  "This score has already been saved! Please play more to achieve a higher score."
+                );
+                return;
+              }
+
+              try {
+                // Call API to save score (private key protected on server)
+                const response = await fetch('/api/save-score', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    playerAddress,
+                    scoreAmount: gameState.score
+                  })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                  alert(
+                    `✅ Score saved successfully!\nScore: ${gameState.score}\nTransaction: ${result.transactionHash.slice(0, 6)}...${result.transactionHash.slice(-4)}`
+                  );
+                  setLastSavedScore(gameState.score);
+                } else {
+                  throw new Error(result.error || 'Failed to save score');
+                }
+                
+              } catch (error) {
+                console.error("❌ Failed to save score:", error);
+                alert(`Failed to save score: ${error instanceof Error ? error.message : 'Unknown error'}`);
+              }
+            }}
+            disabled={
+              !playerAddress ||
+              gameState.score === 0 ||
+              gameState.score <= lastSavedScore
+            }
+            className="control-button save-score"
+          >
+            Save Score
+          </button>
+        </div>
+
+        {/* Overlay for win / game over */}
+        {(gameState.won || gameState.gameOver) && (
+          <div
+            className="overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-label={gameState.won ? "Victory" : "Game Over"}
+          >
+            <div className="overlay-card">
+              <p className="overlay-text">
+                {gameState.won
+                  ? `🎉 Congratulations! You reached 2048. (Score: ${gameState.score})`
+                  : `😔 Game Over! Final Score: ${gameState.score}`}
+              </p>
+              <div className="overlay-actions">
+                <button
+                  onClick={initializeGame}
+                  className="control-button new-game"
+                >
+                  New Game
+                </button>
+                {/* If you want a "Continue" button later, add another button here. */}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Leaderboard Popup */}
+      {/* Leaderboard Popup - Đưa ra ngoài game-container */}
       <LeaderboardPopup
         isOpen={isLeaderboardOpen}
         onClose={() => setIsLeaderboardOpen(false)}
         playerAddress={playerAddress}
       />
-    </div>
+    </>
   );
 }

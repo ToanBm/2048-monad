@@ -31,8 +31,10 @@ export default function Home() {
       {/* Header with Logo and Auth */}
       <section className="auth-section">
         <div className="logo-section">
-          <img src="/monad.svg" alt="Monad Games" className="logo" />
-          <span className="logo-text">2048 Monad Game</span>
+          <button className="logo-button" aria-label="Monad Games">
+            <img src="/2048-logo.svg" alt="Monad Games" className="logo" />
+          </button>
+          <span className="logo-text">Monad Game</span>
         </div>
         <AuthComponent onAddressChange={handleAddressChange} />
       </section>

@@ -90,23 +90,9 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
     return 'text-gray-400';                      // Gray
   };
 
+  // Hiển thị đầy đủ với header controls
   return (
     <div className="leaderboard">
-      <div className="leaderboard-header">
-        <div className="header-controls">
-          <button
-            onClick={loadLeaderboard}
-            disabled={isLoading}
-            className="refresh-btn"
-          >
-            {isLoading ? 'Loading...' : '🔄 Refresh'}
-          </button>
-          <span className="player-count">
-            {leaderboard.length > 0 ? `${leaderboard.length} Players` : 'No Players'}
-          </span>
-        </div>
-      </div>
-
       {error && (
         <div className="error-message">
           {error}
@@ -118,18 +104,33 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
           Loading leaderboard...
         </div>
       ) : leaderboard.length > 0 ? (
-        <div className="leaderboard-list">
-          {leaderboard.map((entry) => (
-            <div
-              key={`${entry.player}-${entry.rank}`}
-              className={`leaderboard-entry ${isCurrentPlayer(entry.wallet) ? 'current-player' : ''}`}
-            >
-              <div className="rank">
-                {getRankIcon(entry.rank)}
-              </div>
-              <div className="player-info">
-                <div className="player-name">{entry.player}</div>
-                <div className="player-wallet">
+        <div className="leaderboard-table">
+          {/* Table Header - Cố định */}
+          <div className="table-header">
+            <div>Rank</div>
+            <div>Player</div>
+            <div>Wallet</div>
+            <div>Score</div>
+          </div>
+          
+          {/* Table Rows Container - Có thể scroll */}
+          <div className="table-rows-container">
+            {leaderboard.map((entry) => (
+              <div
+                key={`${entry.player}-${entry.rank}`}
+                className={`table-row ${isCurrentPlayer(entry.wallet) ? 'current-player' : ''}`}
+              >
+                <div className="rank-column">
+                  {entry.rank <= 3 ? (
+                    <span className="rank-emoji">{getRankIcon(entry.rank)}</span>
+                  ) : (
+                    <span className="rank-number">{getRankIcon(entry.rank)}</span>
+                  )}
+                </div>
+                <div className="player-column">
+                  {entry.player}
+                </div>
+                <div className="wallet-column">
                   <a
                     href={`https://testnet.monadexplorer.com/address/${entry.wallet}`}
                     target="_blank"
@@ -139,12 +140,12 @@ export default function Leaderboard({ playerAddress }: LeaderboardProps) {
                     {formatAddress(entry.wallet)}
                   </a>
                 </div>
+                <div className={`score-column ${getScoreColor(entry.score)}`}>
+                  {entry.score.toLocaleString()}
+                </div>
               </div>
-              <div className={`score ${getScoreColor(entry.score)}`}>
-                {entry.score.toLocaleString()}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ) : (
         <div className="empty-message">

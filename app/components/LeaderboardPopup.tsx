@@ -42,9 +42,22 @@ export default function LeaderboardPopup({ isOpen, onClose, playerAddress }: Lea
         className="leaderboard-popup-content"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header với nút đóng */}
+        {/* Header với nút đóng và controls */}
         <div className="popup-header">
-          <h2 className="popup-title">🏆 Leaderboard</h2>
+          <div className="popup-header-left">
+            <h2 className="popup-title">🏆 Leaderboard</h2>
+            <div className="header-controls">
+              <button
+                onClick={() => window.location.reload()}
+                className="refresh-btn"
+              >
+                🔄 Refresh
+              </button>
+              <span className="player-count">
+                6 Players
+              </span>
+            </div>
+          </div>
           <button 
             onClick={onClose}
             className="popup-close-btn"
