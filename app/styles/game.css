@@ -180,9 +180,10 @@
   flex: 1;
 }
 
-.control-button:hover {
+/* Tắt hover cho control-button */
+/* .control-button:hover {
   background: var(--violet-400);
-}
+} */
 
 /* Animations */
 @keyframes tileAppear {
