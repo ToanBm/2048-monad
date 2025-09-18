@@ -1,6 +1,9 @@
 export async function GET() {
   try {
-              const response = await fetch('https://monad-games-id-site.vercel.app/api/leaderboard?page=1&limit=10&gameId=203&sortBy=scores&sortOrder=desc', {
+    const baseUrl = process.env.NEXT_PUBLIC_MONAD_PORTAL_URL || 'https://www.monadclip.fun';
+    const leaderboardUrl = `${baseUrl}/api/leaderboard?page=1&limit=10&username=toanbm&sortBy=scores&sortOrder=desc`;
+    
+    const response = await fetch(leaderboardUrl, {
       method: 'GET',
       headers: {
         'User-Agent': 'Monad-2048-Game/1.0',
