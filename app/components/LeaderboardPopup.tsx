@@ -53,9 +53,6 @@ export default function LeaderboardPopup({ isOpen, onClose, playerAddress }: Lea
               >
                 🔄 Refresh
               </button>
-              <span className="player-count">
-                6 Players
-              </span>
             </div>
           </div>
           <button 
