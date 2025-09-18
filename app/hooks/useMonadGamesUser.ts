@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useEnv } from '../components/EnvProvider';
 
 interface MonadGamesUser {
   id: number;
@@ -23,6 +24,7 @@ export function useMonadGamesUser(walletAddress: string): UseMonadGamesUserRetur
   const [hasUsername, setHasUsername] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const env = useEnv();
 
   useEffect(() => {
     if (!walletAddress) {
@@ -38,19 +40,26 @@ export function useMonadGamesUser(walletAddress: string): UseMonadGamesUserRetur
       setError(null);
 
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_MONAD_PORTAL_URL}/api/check-wallet?wallet=${walletAddress}`
-        );
+        // Ensure URL has www prefix for monadclip.fun
+        const baseUrl = env.NEXT_PUBLIC_MONAD_PORTAL_URL.includes('monadclip.fun') && !env.NEXT_PUBLIC_MONAD_PORTAL_URL.includes('www.')
+          ? env.NEXT_PUBLIC_MONAD_PORTAL_URL.replace('monadclip.fun', 'www.monadclip.fun')
+          : env.NEXT_PUBLIC_MONAD_PORTAL_URL;
+        const url = `${baseUrl}/api/check-wallet?wallet=${walletAddress}`;
+        console.log('Fetching Monad user data:', { url, walletAddress, env: env.NEXT_PUBLIC_MONAD_PORTAL_URL });
+        
+        const response = await fetch(url);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data: UserResponse = await response.json();
+        console.log('Monad user data received:', data);
         
         setHasUsername(data.hasUsername);
         setUser(data.user || null);
       } catch (err) {
+        console.error('Error fetching Monad user data:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
         setHasUsername(false);
         setUser(null);
@@ -60,7 +69,7 @@ export function useMonadGamesUser(walletAddress: string): UseMonadGamesUserRetur
     };
 
     fetchUserData();
-  }, [walletAddress]);
+  }, [walletAddress, env.NEXT_PUBLIC_MONAD_PORTAL_URL]);
 
   return {
     user,
